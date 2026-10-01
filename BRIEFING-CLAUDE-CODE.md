@@ -75,6 +75,8 @@ Convenções: disciplinas têm carga integralmente teórica; atividades de orien
 
 ## 6. Regras de cálculo
 
+Princípio adotado pelo coordenador: há duas classificações independentes. A categoria do componente (obrigatório, optativo, atividades complementares, extensão por aproveitamento) é uma; a composição da carga (teórica, prática, extensão) é outra. Elas não se cruzam nem se somam. Uma optativa de extensão entra uma vez na carga total, como optativa, e suas horas de extensão entram no percentual de extensão. Não existe bloco de extensão separado do bloco de optativas. Qualquer cálculo novo (percentuais, tetos, mínimos) deve respeitar essa separação.
+
 Ficam no bloco "núcleo de cálculo", nas funções `calc(P)` e `verificacoes(P, R)`, que não acessam o DOM. Preserve essa separação.
 
 - **Carga total** = obrigatórios + atividades complementares + extensão por aproveitamento + `optExig`. Optativas do banco não entram; a carga de optativas entra pelo parâmetro.
@@ -156,7 +158,7 @@ Na proposta de trabalho, as duas cadeias de dez períodos são: Introdução à 
 
 ## 11. Pendências normativas que afetam o aplicativo
 
-- Falta confirmar com os setores responsáveis da UFPB como se computa a extensão cursada em optativas (bloco de UCE optativas). A faixa "Como usar" registra a pendência. A proposta usa 240 h de optativas; o currículo atual, 180 h.
+- Falta confirmar com os setores responsáveis da UFPB como a optativa de extensão é registrada no histórico do estudante. O simulador adota a lógica da seção 6: ela conta uma vez, como optativa, e sua carga de extensão entra no percentual de extensão. A faixa "Como usar" explica essa lógica e registra a pendência. A proposta usa 240 h de optativas; o currículo atual, 180 h.
 
 - A vedação de dupla contagem entre extensão e prática jurídica é citada na nota como IN PRG-PROEX 02/2024, art. 4º, IV. O texto dessa instrução normativa não foi conferido. Por isso o aplicativo apoia a regra apenas no Ementário 2026 e a classifica como diretriz. Não altere essa classificação sem o texto da norma.
 - A tipologia dos componentes curriculares está no RGG, art. 16, § 1º (disciplina, módulo, bloco, atividade de orientação individual e coletiva); o regime das atividades de orientação, nos arts. 38, § 3º, 49 e 50. O aplicativo não oferece a natureza "bloco".

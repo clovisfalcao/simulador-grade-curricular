@@ -262,7 +262,7 @@ tfoot td{font-weight:600; background:var(--surface-2)}
           <p><b>Ligar pré-requisitos.</b> Com o Modo ligação ativo, clique no pré-requisito e depois no componente que passa a exigi-lo. Repetir o par desfaz a ligação.</p>
           <p><b>Recalcular e guardar.</b> Indicadores e Conformidade são recalculados a cada alteração, e os problemas novos aparecem num aviso acima. As propostas ficam neste navegador; use Exportar para levá-las a outro computador.</p>
         </div>
-        <p class="foot" style="margin-top:6px">Pendência: confirmar com os setores da UFPB como se computa a extensão cursada em optativas (bloco de UCE optativas).</p>
+        <p class="foot" style="margin-top:6px">Como as horas são contadas: obrigatório e optativo são a categoria do componente; carga teórica, prática e de extensão são a composição da carga de cada componente. As duas classificações não se cruzam nem se somam: uma optativa de extensão conta uma só vez, nas optativas, e suas horas de extensão entram no percentual de extensão. Pendência: confirmar com os setores da UFPB como a optativa de extensão é registrada no histórico do estudante.</p>
       </details>
       <div class="grade-layout" id="gradeLayout">
       <div style="min-width:0">
@@ -947,7 +947,7 @@ function renderTotais(){
   const tCat = '<div class="box"><h2>Totalização por categoria</h2><div class="tbl-wrap"><table><thead><tr><th>Categoria</th><th class="r">CH</th><th class="r t-teo">CH teór.</th><th class="r t-prat">CH prát.</th><th class="r t-ext">CH ext.</th><th class="r">Créd.</th></tr></thead><tbody>' +
     c.map(x => '<tr><td>' + x.nome + '</td><td class="r num">' + fmt(x.ch) + '</td><td class="r num">' + d(x.teo) + '</td><td class="r num">' + d(x.prat) + '</td><td class="r num">' + d(x.ext) + '</td><td class="r num">' + fmt(x.ch / 15) + '</td></tr>').join('') +
     '</tbody><tfoot><tr><td>Total</td><td class="r num">' + fmt(R.total) + '</td><td class="r num">' + fmt(R.teo) + '</td><td class="r num">' + fmt(R.prat) + '</td><td class="r num">' + fmt(R.extMin) + '</td><td class="r num">' + fmt(R.total / 15) + '</td></tr></tfoot></table></div>' +
-    '<p class="foot">Das optativas, ' + fmt(R.bloco) + ' h correspondem ao bloco mínimo em UCE optativas e contam como extensão. Um crédito equivale a 15 h.</p></div>';
+    '<p class="foot">Das ' + fmt(R.optExig) + ' h de optativas, ' + fmt(R.bloco) + ' h são o mínimo em UCE optativas. Essas horas contam uma só vez: como optativas e, dentro delas, como carga de extensão. Um crédito equivale a 15 h.</p></div>';
 
   const obr = P().comps.filter(x => x.tipo === 'obr');
   const eixos = Object.keys(EIXO).filter(k => k !== 'ac').map(k => {
