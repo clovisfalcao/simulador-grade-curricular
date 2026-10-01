@@ -8,7 +8,7 @@ O curso de Bacharelado em Direito de Santa Rita (Departamento de Ciências Jurí
 
 Existe um simulador anterior, feito por um professor do NDE: <https://hugobelmorais-oss.github.io/simulador-ppc-dcj/> (repositório `hugobelmorais-oss/simulador-ppc-dcj`). Ele soma cargas horárias por período e por natureza e verifica apenas a faixa de extensão. Este aplicativo foi criado para cobrir o que aquele não cobre: pré-requisitos, duração mínima, decomposição da carga horária e as demais exigências normativas.
 
-As propostas carregadas no aplicativo são **propostas de trabalho**. Nenhuma foi deliberada pelo NDE ou pelo Colegiado. Isso precisa continuar claro em qualquer texto do aplicativo ou do repositório.
+O aplicativo abre com uma única **proposta de trabalho**, sem data no nome: a grade revisada após a reunião do NDE (antes chamada "Versão de 19.09.2026"). A proposta de 18.09.2026 foi retirada dos dados de partida a pedido do usuário. As alterações são feitas a partir da proposta de trabalho; para testar alternativas, duplica-se a proposta. Nenhuma proposta foi deliberada pelo NDE ou pelo Colegiado. Isso precisa continuar claro em qualquer texto do aplicativo ou do repositório.
 
 ## 2. Finalidade
 
@@ -109,12 +109,12 @@ A distinção entre norma e diretriz interna é deliberada e deve ser mantida.
 
 ## 8. Interface
 
-- **Cabeçalho**: seleção da proposta; duplicar, renomear, excluir, exportar, importar e restaurar os dados originais. Ações destrutivas pedem confirmação na própria página, sem `confirm()`.
+- **Cabeçalho**: seleção da proposta; duplicar, renomear, excluir, exportar, importar e restaurar a proposta original (descarta alterações e cópias). Ações destrutivas pedem confirmação na própria página, sem `confirm()`.
 - **Faixa de indicadores**: carga total, extensão, básicos, art. 13, duração mínima e créditos, com cor de situação.
 - **Grade e pré-requisitos**: colunas do 1º ao 10º período, mais "sem período fixo", "aproveitamento" e "banco de optativas". Clicar num componente destaca em azul seus pré-requisitos e em roxo o que depende dele. Chaves: mostrar todas as ligações; destacar a cadeia mais longa; modo ligação (clicar no pré-requisito e depois no componente que o exige; repetir o par desfaz). Ligações que violam o art. 33, § 1º, aparecem em vermelho tracejado. Painel lateral de edição.
 - **Tabela de componentes**: edição em linha, com colunas de CH teórica, CH prática, caixa "Ext.", CH de extensão, total, créditos, básico e art. 13.
 - **Conformidade**: parâmetros da proposta e lista de verificações.
-- **Totais**: categorias do histórico escolar da UFPB (obrigatórios, optativos, atividades complementares, extensão por aproveitamento) com decomposição e créditos; obrigatórios por eixo; carga por período; composição da extensão; composição do art. 13; comparação entre propostas.
+- **Totais**: categorias do histórico escolar da UFPB (obrigatórios, optativos, atividades complementares, extensão por aproveitamento) com decomposição e créditos; obrigatórios por eixo; carga por período; composição da extensão; composição do art. 13; comparação entre propostas, exibida quando houver mais de uma (com uma só, a aba orienta a duplicar).
 
 Importação aceita o formato próprio (`{app: "simulador-ppc-dcj-santa-rita", versao: 1, propostas: [...]}`) e o JSON do simulador original (`{proposals: [{nome, componentes: [{nome, natureza, periodo, ch}]}]}`), que é convertido; nesse caso os pré-requisitos ficam vazios. Importar acrescenta propostas, nunca substitui as existentes.
 
@@ -122,30 +122,30 @@ A página segue tema claro e escuro, funciona em tela de celular sem rolagem hor
 
 ## 9. Valores de referência para conferência
 
-Qualquer alteração no núcleo de cálculo deve reproduzir estes resultados com os dados de partida:
+Qualquer alteração no núcleo de cálculo deve reproduzir estes resultados com a proposta de trabalho dos dados de partida:
 
-| Indicador | Proposta de 18.09.2026 | Versão de 19.09.2026 |
-|---|---:|---:|
-| Carga total | 3.798 h | 3.720 h |
-| CH teórica / prática / extensão | 2.820 / 390 / 468 h | 2.760 / 420 / 420 h |
-| Extensão garantida | 12,3% | 11,3% |
-| Extensão máxima com o banco atual | 13,9% | 11,3% |
-| Básicos profissionais | 2.040 h, 53,7% | 2.100 h, 56,5% |
-| AC e prática jurídica | 738 h, 19,4% | 570 h, 15,3% |
-| Cadeia mais longa | 10 períodos | 10 períodos |
-| Cadeia só de disciplinas | 10 (Laboratórios eram disciplinas) | 10 |
-| Simulação com matrícula máxima | 10 períodos | 10 períodos |
-| Elos sensíveis | 5 | 3 |
-| Matrícula mínima / máxima | 255 / 405 h | 240 / 420 h |
+| Indicador | Proposta de trabalho |
+|---|---:|
+| Carga total | 3.720 h |
+| CH teórica / prática / extensão | 2.760 / 420 / 420 h |
+| Extensão garantida | 11,3% |
+| Extensão máxima com o banco atual | 11,3% |
+| Básicos profissionais | 2.100 h, 56,5% |
+| AC e prática jurídica | 570 h, 15,3% |
+| Cadeia mais longa | 10 períodos |
+| Cadeia só de disciplinas | 10 |
+| Simulação com matrícula máxima | 10 períodos |
+| Elos sensíveis | 3 |
+| Matrícula mínima / máxima | 240 / 420 h |
 
-Na versão de 19.09, as duas cadeias de dez períodos são: Introdução à Teoria do Direito I e II, Direito Civil I e II, Teoria Geral do Processo, Mediação e Arbitragem, Laboratórios I a IV; e Introdução I e II, Direito Civil I a VI, Direito da Criança e do Adolescente, Direito da Seguridade Social. Os três elos sensíveis são os pré-requisitos que ligam Introdução I a Civil II, comuns às duas cadeias.
+Na proposta de trabalho, as duas cadeias de dez períodos são: Introdução à Teoria do Direito I e II, Direito Civil I e II, Teoria Geral do Processo, Mediação e Arbitragem, Laboratórios I a IV; e Introdução I e II, Direito Civil I a VI, Direito da Criança e do Adolescente, Direito da Seguridade Social. Os três elos sensíveis são os pré-requisitos que ligam Introdução I a Civil II, comuns às duas cadeias.
 
 ## 10. Limitações conhecidas
 
 - Os dados ficam no navegador de cada usuário. Não há sincronização nem edição compartilhada; o compartilhamento se faz por exportação e importação de arquivo.
 - O aplicativo não trata equivalências nem transição do currículo de 2019. Esse levantamento está na nota técnica.
 - Os pré-requisitos dos dados de partida são sugestões, a validar com os professores de cada área. Os marcados como deduzidos não têm indicação expressa em documento.
-- A extensão máxima depende das UCE optativas cadastradas no banco. Com o banco atual, a trajetória máxima coincide com a mínima na versão de 19.09.
+- A extensão máxima depende das UCE optativas cadastradas no banco. Com o banco atual, a trajetória máxima coincide com a mínima.
 - A verificação de componentes numerados depende do nome terminar em algarismo romano.
 - A simulação do estudante mais adiantado usa um critério guloso. Ela confirma a duração mínima, mas não prova que nenhuma outra ordem de matrícula seria mais rápida; a prova está na profundidade da cadeia.
 - Medicina Legal aparece como obrigatória no 10º período porque não houve deliberação, mas é provável que passe a optativa. As duas substitutas estudadas, Criminologia e Política Criminal e Leis Penais Especiais, estão no banco de optativas; para simular a troca, basta mudar o tipo e o período.

@@ -11,7 +11,7 @@ Os dados carregados são propostas de trabalho. Nenhuma delas representa deliber
 - Registra, para cada componente, a carga horária teórica, prática e de extensão, com os créditos correspondentes (1 crédito = 15 h).
 - Calcula os totais por categoria do histórico escolar: componentes obrigatórios, optativos, atividades complementares e extensão por aproveitamento.
 - Verifica a conformidade da proposta, separando exigências normativas de diretrizes do NDE.
-- Compara as propostas entre si.
+- Compara a proposta de trabalho com as cópias alteradas a partir dela.
 
 ## Verificações
 
@@ -29,10 +29,9 @@ Os dados carregados são propostas de trabalho. Nenhuma delas representa deliber
 
 **Diretrizes do NDE**: teto de horas em sala por período, disciplinas obrigatórias com 60 h, componentes numerados em períodos seguidos, Penal acompanhando Civil, cadeia de disciplinas até o último período, pré-requisitos sem redundância, limites de matrícula semestral, oferta para o bloco de UCE optativas, vedação de dupla contagem entre extensão e prática jurídica.
 
-## Propostas incluídas
+## Proposta incluída
 
-- **Proposta de 18.09.2026**: grade apresentada ao NDE na reunião de 18 de setembro.
-- **Versão de 19.09.2026, 14h20**: grade revisada após a reunião, com os Laboratórios como atividade de orientação coletiva, Direito do Consumidor obrigatório e o novo modelo de extensão.
+O simulador abre com uma única **Proposta de trabalho**: a grade revisada após a reunião do NDE, com os Laboratórios como atividade de orientação coletiva, Direito do Consumidor obrigatório e o novo modelo de extensão. As alterações feitas nela são recalculadas na hora. Para testar alternativas sem perder a base, use **Duplicar** e altere a cópia; a aba Totais compara as propostas quando houver mais de uma. **Restaurar original** volta à proposta de partida.
 
 ## Como usar
 
