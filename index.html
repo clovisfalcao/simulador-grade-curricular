@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Simulador da matriz curricular do novo PPC do curso de Direito de Santa Rita (DCJ/CCJ/UFPB): pré-requisitos, carga teórica, prática e de extensão, e verificação de conformidade.">
-<title>Simulador PPC Direito Santa Rita</title>
+<title>Simulador de Estrutura Curricular</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -67,6 +67,13 @@ label{cursor:pointer}
 .top-row{display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:12px}
 .propbar{display:flex; flex-wrap:wrap; align-items:center; gap:6px}
 .propbar select{max-width:min(100%, 22rem)}
+.savebar{display:flex; flex-wrap:wrap; align-items:center; gap:6px 8px; padding-top:10px; border-top:1px solid var(--line)}
+.estado{font-size:.82rem; color:var(--muted)}
+.estado.sujo{color:var(--warn); font-weight:600}
+.pontos{display:flex; flex-direction:column; gap:6px; max-height:55vh; overflow-y:auto}
+.ponto{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:6px 10px; padding:8px 10px; border:1px solid var(--line); border-radius:var(--r); background:var(--surface-2)}
+.ponto .nm{font-weight:600}
+.ponto .acts{display:flex; gap:6px}
 .confirm{display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:8px 10px; border-radius:var(--r); background:var(--warn-soft); color:var(--ink); border:1px solid var(--warn)}
 
 /* indicadores */
@@ -223,7 +230,7 @@ tfoot td{font-weight:600; background:var(--surface-2)}
     <div class="top-row">
       <div>
         <p class="eyebrow">Bacharelado em Direito · Santa Rita · DCJ/CCJ/UFPB</p>
-        <h1>Simulador do PPC</h1>
+        <h1>Simulador de estrutura curricular</h1>
       </div>
       <div class="propbar">
         <label for="selProp" class="muted">Proposta</label>
@@ -237,6 +244,11 @@ tfoot td{font-weight:600; background:var(--surface-2)}
       </div>
     </div>
     <p id="propSub" class="muted"></p>
+    <div class="savebar">
+      <button id="btnSalvar" type="button">Salvar ponto de controle</button>
+      <button id="btnPontos" type="button">Pontos de controle</button>
+      <span id="estadoSalvo" class="estado"></span>
+    </div>
     <div id="confirmBar" class="confirm" hidden></div>
   </header>
 
@@ -260,7 +272,7 @@ tfoot td{font-weight:600; background:var(--surface-2)}
           <p><b>Mudar de período.</b> Arraste o componente para outro período ou para o banco de optativas. No celular, toque e segure antes de arrastar.</p>
           <p><b>Optativas.</b> Ficam no banco, fora das colunas, porque o estudante as cursa em qualquer período. Cada uma pertence ao período seguinte ao de seu pré-requisito mais adiantado, obrigatório ou optativo; sem pré-requisito, ao período 0. O banco lista do período 0 ao 10º.</p>
           <p><b>Ligar pré-requisitos.</b> Com o Modo ligação ativo, clique no pré-requisito e depois no componente que passa a exigi-lo. Repetir o par desfaz a ligação.</p>
-          <p><b>Recalcular e guardar.</b> Indicadores e Conformidade são recalculados a cada alteração, e os problemas novos aparecem num aviso acima. As propostas ficam neste navegador; use Exportar para levá-las a outro computador.</p>
+          <p><b>Recalcular e salvar.</b> Indicadores e Conformidade são recalculados a cada alteração, e os problemas novos aparecem num aviso acima. Nada é salvo automaticamente: use <b>Salvar ponto de controle</b> para guardar a situação atual neste navegador e <b>Pontos de controle</b> para voltar a uma situação salva. Exportar leva as propostas a outro computador.</p>
         </div>
         <p class="foot" style="margin-top:6px">Como as horas são contadas: obrigatório e optativo são a categoria do componente; carga teórica, prática e de extensão são a composição da carga de cada componente. As duas classificações não se cruzam nem se somam: uma optativa de extensão conta uma só vez, nas optativas, e suas horas de extensão entram no percentual de extensão. Pendência: confirmar com os setores da UFPB como a optativa de extensão é registrada no histórico do estudante.</p>
       </details>
@@ -589,7 +601,7 @@ const KEY = 'simulador-ppc-dcj-sr-v1';
 const DEF_CFG = {optExig:240, blocoUCE:120, tetoSala:300, durMin:10, cargaMin:3700, perMax:15, matMax:null};
 const clone = o => JSON.parse(JSON.stringify(o));
 let S = carregar();
-const UI = {tab:'grade', sel:null, links:false, crit:false, ligar:false, de:null, alertas:[], fimArrasto:0};
+const UI = {tab:'grade', sel:null, links:false, crit:false, ligar:false, de:null, alertas:[], fimArrasto:0, sujo:false};
 try { const t = localStorage.getItem(KEY + '-tab'); if (t) UI.tab = t; } catch(e){}
 
 function carregar(){
@@ -599,10 +611,59 @@ function carregar(){
   } catch(e){}
   return {props: clone(SEED), ativo: SEED[0].id};
 }
-let tSave = null;
-function salvar(){
-  clearTimeout(tSave);
-  tSave = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }, 250);
+/* Sem salvamento automático. A área de trabalho (S) só vai para o navegador quando o usuário salva um ponto de controle.
+   KEY guarda a situação aberta na próxima visita; KEY-pontos guarda a lista de pontos de controle. */
+let PONTOS = [];
+try { const r = JSON.parse(localStorage.getItem(KEY + '-pontos') || '[]'); if (Array.isArray(r)) PONTOS = r; } catch(e){}
+function marcarSujo(){ UI.sujo = true; renderEstado(); }
+function gravar(){
+  try {
+    localStorage.setItem(KEY, JSON.stringify(S));
+    localStorage.setItem(KEY + '-pontos', JSON.stringify(PONTOS));
+    return true;
+  } catch(e){ toast('Não foi possível salvar neste navegador. Use Exportar para guardar em arquivo.'); return false; }
+}
+function dataHora(iso){ const d = new Date(iso); return d.toLocaleDateString('pt-BR') + ', ' + d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'}); }
+function renderEstado(){
+  const el = $('estadoSalvo'); if (!el) return;
+  el.classList.toggle('sujo', !!UI.sujo);
+  const ult = PONTOS[PONTOS.length - 1];
+  el.textContent = UI.sujo ? 'Alterações não salvas' : (ult ? 'Último ponto salvo: ' + ult.nome + ' (' + dataHora(ult.data) + ')' : 'Nenhum ponto de controle salvo');
+  $('btnSalvar').classList.toggle('primary', !!UI.sujo);
+  $('btnPontos').textContent = 'Pontos de controle' + (PONTOS.length ? ' (' + PONTOS.length + ')' : '');
+}
+function salvarPonto(){
+  const agora = new Date();
+  const sug = 'Ponto de ' + agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+  modal('Salvar ponto de controle', '<p class="muted">Guarda neste navegador a situação atual de todas as propostas. Você poderá voltar a ela em Pontos de controle.</p><label class="f" for="ptN" style="display:flex;flex-direction:column;gap:4px">Nome do ponto<input type="text" id="ptN"></label><div class="acts"><button type="button" id="ptC">Cancelar</button><button type="button" class="primary" id="ptOk">Salvar</button></div>', fechar => {
+    $('ptN').value = sug; $('ptN').select();
+    $('ptC').onclick = fechar;
+    const ok = () => {
+      PONTOS.push({id: novoId('pt'), nome: $('ptN').value.trim() || sug, data: agora.toISOString(), resumo: fmt(R.total) + ' h · ' + (R.A.ciclo ? 'ciclo' : R.A.max + ' períodos') + ' · ' + P().nome, S: clone(S)});
+      if (gravar()){ UI.sujo = false; renderEstado(); toast('Ponto de controle salvo'); } else PONTOS.pop();
+      fechar();
+    };
+    $('ptOk').onclick = ok;
+    $('ptN').addEventListener('keydown', e => { if (e.key === 'Enter') ok(); });
+  });
+}
+function abrirPontos(){
+  modal('Pontos de controle', '<div id="ptLista" class="pontos"></div><div class="acts"><button type="button" id="ptF">Fechar</button></div>', fechar => {
+    $('ptF').onclick = fechar;
+    const pend = {};
+    const montar = () => {
+      $('ptLista').innerHTML = PONTOS.length ? PONTOS.slice().reverse().map(p => '<div class="ponto"><div><div class="nm">' + esc(p.nome) + '</div><div class="foot">' + dataHora(p.data) + (p.resumo ? ' · ' + esc(p.resumo) : '') + '</div></div><div class="acts">' +
+        (pend[p.id] === 'abrir' ? '<button type="button" class="danger" data-ok-abrir="' + p.id + '">Confirmar: descartar alterações não salvas</button>' : '<button type="button" data-abrir="' + p.id + '">Voltar a este ponto</button>') +
+        (pend[p.id] === 'del' ? '<button type="button" class="danger" data-ok-del="' + p.id + '">Confirmar exclusão</button>' : '<button type="button" data-del="' + p.id + '">Excluir</button>') + '</div></div>').join('')
+        : '<p class="muted">Nenhum ponto de controle salvo neste navegador.</p>';
+      const abrir = id => { const p = PONTOS.find(x => x.id === id); S = clone(p.S); UI.sel = null; UI.de = null; mudou(false); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} UI.sujo = false; renderEstado(); fechar(); toast('Situação de "' + p.nome + '" aberta'); };
+      $('ptLista').querySelectorAll('[data-abrir]').forEach(b => b.onclick = () => { if (UI.sujo){ pend[b.dataset.abrir] = 'abrir'; montar(); } else abrir(b.dataset.abrir); });
+      $('ptLista').querySelectorAll('[data-ok-abrir]').forEach(b => b.onclick = () => abrir(b.dataset.okAbrir));
+      $('ptLista').querySelectorAll('[data-del]').forEach(b => b.onclick = () => { pend[b.dataset.del] = 'del'; montar(); });
+      $('ptLista').querySelectorAll('[data-ok-del]').forEach(b => b.onclick = () => { PONTOS = PONTOS.filter(x => x.id !== b.dataset.okDel); try { localStorage.setItem(KEY + '-pontos', JSON.stringify(PONTOS)); } catch(e){} renderEstado(); montar(); toast('Ponto de controle excluído'); });
+    };
+    montar();
+  });
 }
 function P(){ return S.props.find(p => p.id === S.ativo) || S.props[0]; }
 function comp(id){ return P().comps.find(c => c.id === id); }
@@ -617,7 +678,7 @@ function recalc(){ R = calc(P()); V = verificacoes(P(), R); }
 /* avisar = false nas trocas de proposta (selecionar, duplicar, excluir, restaurar, importar) */
 function mudou(avisar = true){
   const antes = R ? problemas(R) : new Map();
-  recalc(); salvar();
+  recalc(); UI.sujo = true;
   const agora = problemas(R);
   const novos = avisar ? [...agora.keys()].filter(k => !antes.has(k)).map(k => agora.get(k)) : [];
   UI.alertas = avisar ? novos.concat(UI.alertas.filter(a => a.k && agora.has(a.k) && !novos.some(n => n.k === a.k))) : [];
@@ -916,7 +977,7 @@ function renderTabela(){
 function abrirEditorModal(id){
   const c = comp(id); if (!c) return;
   modal('Editar componente', '<div id="mdEd"></div><div class="acts"><button type="button" class="primary" id="mdOk">Concluir</button></div>', fechar => {
-    const montar = () => { $('mdEd').innerHTML = editorHTML(c); ligarEditor($('mdEd'), c, () => { recalc(); salvar(); render(); montar(); }); };
+    const montar = () => { $('mdEd').innerHTML = editorHTML(c); ligarEditor($('mdEd'), c, () => { recalc(); UI.sujo = true; render(); montar(); }); };
     montar();
     $('mdOk').onclick = fechar;
   });
@@ -1063,7 +1124,7 @@ function importar(){
 
 /* ---------- ações do cabeçalho ---------- */
 function ligarTopo(){
-  $('selProp').onchange = e => { S.ativo = e.target.value; UI.sel = null; UI.de = null; mudou(false); };
+  $('selProp').onchange = e => { const s0 = UI.sujo; S.ativo = e.target.value; UI.sel = null; UI.de = null; mudou(false); UI.sujo = s0; renderEstado(); };
   $('btnDup').onclick = () => { const n = clone(P()); n.id = novoId('p'); n.nome = P().nome + ' (cópia)'; S.props.push(n); S.ativo = n.id; mudou(false); toast('Proposta duplicada'); };
   $('btnRen').onclick = () => modal('Renomear proposta', '<label class="f" for="rnN" style="display:flex;flex-direction:column;gap:4px">Nome<input type="text" id="rnN"></label><label class="f" for="rnS" style="display:flex;flex-direction:column;gap:4px">Descrição<input type="text" id="rnS"></label><div class="acts"><button type="button" id="rnC">Cancelar</button><button type="button" class="primary" id="rnOk">Salvar</button></div>', fechar => {
     $('rnN').value = P().nome; $('rnS').value = P().sub || ''; $('rnN').focus();
@@ -1074,8 +1135,11 @@ function ligarTopo(){
     if (S.props.length < 2){ toast('Mantenha ao menos uma proposta'); return; }
     confirmar('Excluir a proposta "' + P().nome + '" deste navegador?', 'Excluir', () => { S.props = S.props.filter(p => p.id !== S.ativo); S.ativo = S.props[0].id; UI.sel = null; mudou(false); toast('Proposta excluída'); });
   };
-  $('btnRes').onclick = () => confirmar('Substituir todas as propostas deste navegador pela proposta de trabalho original? As alterações e as cópias feitas aqui serão perdidas.', 'Restaurar', () => { S = {props:clone(SEED), ativo:SEED[0].id}; UI.sel = null; mudou(false); toast('Proposta original restaurada'); });
+  $('btnRes').onclick = () => confirmar('Substituir a área de trabalho pela proposta de trabalho original? As alterações e cópias ainda não salvas serão perdidas. Os pontos de controle continuam guardados.', 'Restaurar', () => { S = {props:clone(SEED), ativo:SEED[0].id}; UI.sel = null; mudou(false); toast('Proposta original restaurada'); });
   $('btnExp').onclick = exportar;
+  $('btnSalvar').onclick = salvarPonto;
+  $('btnPontos').onclick = abrirPontos;
+  window.addEventListener('beforeunload', e => { if (UI.sujo){ e.preventDefault(); e.returnValue = ''; } });
   $('btnImp').onclick = importar;
   document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { UI.tab = b.dataset.tab; try { localStorage.setItem(KEY + '-tab', UI.tab); } catch(e){} render(); });
   $('ckLinks').onchange = e => { UI.links = e.target.checked; renderGrade(); };
@@ -1192,7 +1256,7 @@ function ligarArrasto(){
 }
 
 function render(){
-  renderTopo(); renderAbas(); renderAlertas();
+  renderTopo(); renderAbas(); renderAlertas(); renderEstado();
   if (UI.tab === 'grade'){ renderGrade(); renderDetalhe(); }
   if (UI.tab === 'tabela') renderTabela();
   if (UI.tab === 'conf') renderConf();

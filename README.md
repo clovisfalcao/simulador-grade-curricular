@@ -1,4 +1,4 @@
-# Simulador do PPC de Direito de Santa Rita
+# Simulador de estrutura curricular do curso de Direito de Santa Rita
 
 Ferramenta de trabalho do Núcleo Docente Estruturante do curso de Bacharelado em Direito de Santa Rita (DCJ/CCJ/UFPB) para montar e testar a matriz curricular do novo Projeto Pedagógico do Curso.
 
@@ -37,7 +37,7 @@ O simulador abre com uma única **Proposta de trabalho**: a grade revisada após
 
 ## Como usar
 
-Abra `index.html` no navegador ou acesse a página publicada. As alterações ficam guardadas no navegador de quem usa. Para levar uma proposta a outro computador ou compartilhá-la, use **Exportar** e depois **Importar** no destino.
+Abra `index.html` no navegador ou acesse a página publicada. Nada é salvo automaticamente: use **Salvar ponto de controle** para guardar a situação atual no navegador e **Pontos de controle** para voltar a uma situação salva. Para levar uma proposta a outro computador ou compartilhá-la, use **Exportar** e depois **Importar** no destino.
 
 O simulador também importa o JSON exportado pelo [simulador original do NDE](https://hugobelmorais-oss.github.io/simulador-ppc-dcj/). Nesse caso as categorias são convertidas automaticamente e os pré-requisitos precisam ser preenchidos.
 

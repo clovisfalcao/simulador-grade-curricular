@@ -38,7 +38,7 @@ Não altere cálculos, textos normativos ou dados de partida nesta tarefa.
 
 ## 5. Modelo de dados
 
-O estado é `{props: [proposta, ...], ativo: id}`, gravado em `localStorage` na chave `simulador-ppc-dcj-sr-v1`. A aba ativa fica em `simulador-ppc-dcj-sr-v1-tab`.
+O estado é `{props: [proposta, ...], ativo: id}`. Não há salvamento automático, por decisão do coordenador: a página funciona como área de trabalho, e o usuário salva pontos de controle quando quer. Salvar um ponto grava a lista de pontos em `simulador-ppc-dcj-sr-v1-pontos` (cada ponto com nome, data, resumo e cópia do estado) e grava o estado em `simulador-ppc-dcj-sr-v1`, que é a situação aberta na próxima visita. Voltar a um ponto também atualiza essa chave. Ao sair com alterações não salvas, o navegador pede confirmação. A aba ativa fica em `simulador-ppc-dcj-sr-v1-tab`.
 
 **Proposta**
 
@@ -112,7 +112,7 @@ A distinção entre norma e diretriz interna é deliberada e deve ser mantida.
 
 ## 8. Interface
 
-- **Cabeçalho**: seleção da proposta; duplicar, renomear, excluir, exportar, importar e restaurar a proposta original (descarta alterações e cópias). Ações destrutivas pedem confirmação na própria página, sem `confirm()`.
+- **Cabeçalho**: título "Simulador de estrutura curricular"; seleção da proposta; duplicar, renomear, excluir, exportar, importar e restaurar a proposta original (substitui a área de trabalho pelos dados de partida do arquivo, sem apagar os pontos de controle). Abaixo, "Salvar ponto de controle", "Pontos de controle" (lista com voltar e excluir, ambos com confirmação) e a situação do salvamento ("Alterações não salvas" ou o último ponto salvo). Ações destrutivas pedem confirmação na própria página, sem `confirm()`.
 - **Faixa de indicadores**: carga total, extensão, básicos, art. 13, duração mínima e créditos, com cor de situação.
 - **Grade e pré-requisitos**: faixa horizontal "Como usar" no alto da aba, com uma nota discreta sobre a pendência do cálculo da extensão nas optativas, que pode ser recolhida (o estado fica em `simulador-ppc-dcj-sr-v1-ajuda`). Colunas do 1º ao 10º período, mais "obrigatórios sem período" (que deve ficar vazia), "aproveitamento" e "banco de optativas", sobre fundo mais escuro que os cartões dos componentes. Clicar num componente destaca em laranja seus pré-requisitos e em roxo o que depende dele; o vermelho fica reservado a erros. Chaves: mostrar todas as ligações; destacar a cadeia mais longa; modo ligação (clicar no pré-requisito e depois no componente que o exige; repetir o par desfaz). Ligações que violam o art. 33, § 1º, aparecem em vermelho tracejado. As optativas ficam fora da grade, no banco, agrupadas pelo período a que pertencem, em ordem crescente do período 0 ao 10º, e com o período num rótulo em cada cartão. As colunas de períodos mostram só obrigatórios. No painel, o período da optativa aparece como informação, com o pré-requisito que o determina. O painel lateral de edição só aparece com um componente selecionado; sem seleção, a grade ocupa a largura toda.
 - **Arrastar componentes**: obrigatórios e optativos podem ser arrastados para um período (vira obrigatório naquele período), para "obrigatórios sem período" ou para o banco de optativas (vira optativo). No celular, toca-se e segura antes de arrastar. O arrasto que colocaria o componente no mesmo período ou antes de um pré-requisito, ou no mesmo período ou depois de um componente que dele depende, é recusado com aviso (RGG, art. 33, § 1º). Atividades complementares e extensão por aproveitamento não se arrastam.
@@ -147,6 +147,7 @@ Na proposta de trabalho, as duas cadeias de dez períodos são: Introdução à 
 
 ## 10. Limitações conhecidas
 
+- Os pontos de controle ficam no navegador de cada usuário; limpar os dados do navegador os apaga. Para guardar fora do navegador, use Exportar.
 - Os dados ficam no navegador de cada usuário. Não há sincronização nem edição compartilhada; o compartilhamento se faz por exportação e importação de arquivo.
 - O aplicativo não trata equivalências nem transição do currículo de 2019. Esse levantamento está na nota técnica.
 - Os pré-requisitos dos dados de partida são sugestões, a validar com os professores de cada área. Os marcados como deduzidos não têm indicação expressa em documento.
