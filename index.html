@@ -14,9 +14,10 @@
   --bg:#eef1f4; --surface:#ffffff; --surface-2:#f5f7f9; --ink:#16202a; --muted:#566472; --line:#d3dbe3;
   --accent:#1d4f91; --accent-ink:#ffffff; --accent-soft:#dfe8f5;
   --teo:#3f63a8; --prat:#b07a12; --ext:#23856a;
-  --anc:#1f6fd1; --anc-soft:#e3eefc; --desc:#8b3db3; --desc-soft:#f3e8f9;
+  --anc:#e0600b; --anc-soft:#fde6d2; --desc:#8b3db3; --desc-soft:#f3e8f9;
   --ok:#2f7d4f; --ok-soft:#e2f2e7; --warn:#946000; --warn-soft:#fbf0d9; --bad:#b8382c; --bad-soft:#fbe4e1;
   --link:#8c99a6;
+  --board:#d8e0e9; --card:#ffffff; --card-line:#a9b6c4; --card-shadow:0 1px 2px rgba(16,32,52,.14);
   --f-body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
   --f-cond:"IBM Plex Sans Condensed", "Arial Narrow", "IBM Plex Sans", sans-serif;
   --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -26,16 +27,16 @@
   --bg:#11161c; --surface:#18202a; --surface-2:#1e2733; --ink:#e6ecf2; --muted:#9aa8b6; --line:#2e3a47;
   --accent:#86aee8; --accent-ink:#0d1520; --accent-soft:#1c2c43;
   --teo:#8ea9e2; --prat:#e2b254; --ext:#5fc4a3;
-  --anc:#6ea8f5; --anc-soft:#18293f; --desc:#c88ce8; --desc-soft:#2b1f3b;
+  --anc:#ff9a4d; --anc-soft:#3d2614; --desc:#c88ce8; --desc-soft:#2b1f3b;
   --ok:#6cc38e; --ok-soft:#163023; --warn:#e3b24f; --warn-soft:#33280f; --bad:#f0857a; --bad-soft:#3a1d1a;
-  --link:#5c6a78; color-scheme:dark; } }
+  --link:#5c6a78; --board:#0b0f14; --card:#2a3748; --card-line:#46566b; --card-shadow:0 1px 2px rgba(0,0,0,.5); color-scheme:dark; } }
 :root[data-theme="dark"]{
   --bg:#11161c; --surface:#18202a; --surface-2:#1e2733; --ink:#e6ecf2; --muted:#9aa8b6; --line:#2e3a47;
   --accent:#86aee8; --accent-ink:#0d1520; --accent-soft:#1c2c43;
   --teo:#8ea9e2; --prat:#e2b254; --ext:#5fc4a3;
-  --anc:#6ea8f5; --anc-soft:#18293f; --desc:#c88ce8; --desc-soft:#2b1f3b;
+  --anc:#ff9a4d; --anc-soft:#3d2614; --desc:#c88ce8; --desc-soft:#2b1f3b;
   --ok:#6cc38e; --ok-soft:#163023; --warn:#e3b24f; --warn-soft:#33280f; --bad:#f0857a; --bad-soft:#3a1d1a;
-  --link:#5c6a78; color-scheme:dark; }
+  --link:#5c6a78; --board:#0b0f14; --card:#2a3748; --card-line:#46566b; --card-shadow:0 1px 2px rgba(0,0,0,.5); color-scheme:dark; }
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -82,28 +83,46 @@ label{cursor:pointer}
 .tabs button[aria-selected="true"]{color:var(--ink); border-bottom-color:var(--accent)}
 
 /* grade */
-.grade-layout{display:grid; grid-template-columns:minmax(0,1fr) 330px; gap:14px; align-items:start}
-@media (max-width: 960px){ .grade-layout{grid-template-columns:minmax(0,1fr)} }
+.grade-tab{display:flex; flex-direction:column; gap:10px}
+.grade-layout{display:grid; grid-template-columns:minmax(0,1fr); gap:14px; align-items:start}
+.grade-layout.com-painel{grid-template-columns:minmax(0,1fr) 330px}
+@media (max-width: 960px){ .grade-layout.com-painel{grid-template-columns:minmax(0,1fr)} }
+.ajuda{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:8px 12px}
+.ajuda summary{cursor:pointer; font-family:var(--f-cond); font-weight:600; font-size:.95rem}
+.ajuda-itens{display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap:6px 18px; margin-top:6px}
+.ajuda-itens p{font-size:.82rem; color:var(--muted)}
+.ajuda-itens b{color:var(--ink)}
+.alertas{display:flex; flex-direction:column; gap:6px; padding:10px 12px; border-radius:var(--r); border:1px solid var(--bad); background:var(--bad-soft)}
+.alertas.so-warn{border-color:var(--warn); background:var(--warn-soft)}
+.alertas .cab{display:flex; justify-content:space-between; align-items:center; gap:8px}
+.alertas ul{margin:0; padding-left:1.1rem; display:flex; flex-direction:column; gap:3px; font-size:.86rem}
+.alertas li.bad::marker{color:var(--bad)} .alertas li.warn::marker{color:var(--warn)}
+.alertas .fonte{color:var(--muted); font-size:.78rem}
 .toolbar{display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center; margin-bottom:8px}
 .toggle{display:inline-flex; align-items:center; gap:6px; padding:.3rem .6rem; border:1px solid var(--line); border-radius:999px; background:var(--surface); font-size:.86rem}
 .toggle input{accent-color:var(--accent)}
 .toggle.on{border-color:var(--accent); background:var(--accent-soft)}
 .legend{display:flex; flex-wrap:wrap; gap:10px; font-size:.78rem; color:var(--muted)}
 .legend i{display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:4px; vertical-align:-1px}
-.board-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:var(--r); background:var(--surface-2)}
+.board-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:var(--r); background:var(--board)}
 .board{position:relative; display:grid; grid-auto-flow:column; grid-auto-columns:182px; gap:12px; padding:12px; min-height:300px; width:max-content}
 .board svg{position:absolute; left:0; top:0; pointer-events:none; overflow:visible; z-index:0}
-.col{display:flex; flex-direction:column; gap:7px; min-width:0}
-.colhead{display:flex; flex-direction:column; gap:3px; padding:2px 2px 6px; border-bottom:1px solid var(--line)}
+.col{display:flex; flex-direction:column; gap:7px; min-width:0; padding:3px; margin:-3px; border-radius:var(--r); outline:2px dashed transparent; outline-offset:2px; transition:background .12s}
+.col.alvo{outline-color:var(--accent); background:var(--accent-soft)}
+.col.alvo.proibido{outline-color:var(--bad); background:var(--bad-soft)}
+.colhead{display:flex; flex-direction:column; gap:3px; padding:2px 2px 6px; border-bottom:1px solid var(--card-line)}
 .colhead .t{font-family:var(--f-cond); font-weight:600; font-size:.95rem}
 .colhead .m{font-family:var(--f-mono); font-size:.72rem; color:var(--muted)}
 .meter{height:5px; background:var(--line); border-radius:3px; overflow:hidden; display:flex}
 .meter b{display:block; background:var(--accent)} .meter b.over{background:var(--bad)}
-.card{position:relative; z-index:1; display:flex; flex-direction:column; gap:4px; text-align:left; width:100%; padding:7px 8px 8px; border:1px solid var(--line); border-radius:var(--r); background:var(--surface); transition:opacity .12s, box-shadow .12s}
+.card{position:relative; z-index:1; display:flex; flex-direction:column; gap:4px; text-align:left; width:100%; padding:7px 8px 8px; border:1px solid var(--card-line); border-radius:var(--r); background:var(--card); box-shadow:var(--card-shadow); transition:opacity .12s, box-shadow .12s; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none}
+.card.movel{cursor:grab}
+.card.arrastando{opacity:.35}
+.card.fantasma{position:fixed; z-index:80; pointer-events:none; margin:0; cursor:grabbing; box-shadow:0 8px 22px rgba(0,0,0,.28); transform:rotate(1.5deg); opacity:.95}
 .card .cn{font-family:var(--f-cond); font-weight:500; font-size:.86rem; line-height:1.2}
 .card .cm{display:flex; justify-content:space-between; gap:6px; font-size:.7rem; color:var(--muted)}
 .card .cm .num{color:var(--ink)}
-.badge{font-size:.66rem; letter-spacing:.04em; text-transform:uppercase; padding:1px 5px; border-radius:3px; border:1px solid var(--line); color:var(--muted); white-space:nowrap}
+.badge{font-size:.66rem; letter-spacing:.04em; text-transform:uppercase; padding:1px 5px; border-radius:3px; border:1px solid var(--card-line); color:var(--muted); white-space:nowrap}
 .badge.aoc,.badge.aoi{border-style:dashed}
 .tpe{display:flex; height:4px; border-radius:2px; overflow:hidden; background:var(--line)}
 .tpe i{display:block} .tpe .t{background:var(--teo)} .tpe .p{background:var(--prat)} .tpe .e{background:var(--ext)}
@@ -227,10 +246,23 @@ tfoot td{font-weight:600; background:var(--surface-2)}
     <button type="button" role="tab" data-tab="totais" id="tb-totais">Totais</button>
   </nav>
 
+  <div id="alertas" class="alertas" role="alert" hidden></div>
+
   <main>
-    <section id="tab-grade" class="grade-layout">
+    <section id="tab-grade" class="grade-tab">
+      <details class="ajuda" id="ajuda" open>
+        <summary>Como usar</summary>
+        <div class="ajuda-itens">
+          <p><b>Ver pré-requisitos.</b> Clique num componente: em laranja, o que ele exige; em roxo, o que depende dele. O painel de edição abre ao lado.</p>
+          <p><b>Mudar de período.</b> Arraste o componente para outro período, para "sem período fixo" ou para o banco de optativas. No celular, toque e segure antes de arrastar.</p>
+          <p><b>Ligar pré-requisitos.</b> Com o Modo ligação ativo, clique no pré-requisito e depois no componente que passa a exigi-lo. Repetir o par desfaz a ligação.</p>
+          <p><b>Recalcular e guardar.</b> Indicadores e Conformidade são recalculados a cada alteração, e os problemas novos aparecem num aviso acima. As propostas ficam neste navegador; use Exportar para levá-las a outro computador.</p>
+        </div>
+      </details>
+      <div class="grade-layout" id="gradeLayout">
       <div style="min-width:0">
         <div class="toolbar">
+          <button type="button" class="primary" id="btnAddG">Adicionar componente</button>
           <label class="toggle" id="tgLinks"><input type="checkbox" id="ckLinks"> Mostrar todas as ligações</label>
           <label class="toggle" id="tgCrit"><input type="checkbox" id="ckCrit"> Cadeia mais longa</label>
           <label class="toggle" id="tgLigar"><input type="checkbox" id="ckLigar"> Modo ligação</label>
@@ -243,9 +275,10 @@ tfoot td{font-weight:600; background:var(--surface-2)}
           </div>
         </div>
         <div class="board-wrap"><div class="board" id="board"></div></div>
-        <p class="foot" style="margin-top:6px">Borda tracejada: atividade de orientação, que não ocupa dia no horário. Linha vermelha tracejada: pré-requisito no mesmo período ou depois (RGG, art. 33, § 1º).</p>
+        <p class="foot" style="margin-top:6px">Borda tracejada: atividade de orientação, que não ocupa dia no horário. Linha vermelha tracejada e faixa vermelha no componente: pré-requisito no mesmo período ou depois (RGG, art. 33, § 1º).</p>
       </div>
-      <aside class="painel" id="detalhe" aria-label="Componente selecionado"></aside>
+      <aside class="painel" id="detalhe" aria-label="Componente selecionado" hidden></aside>
+      </div>
     </section>
 
     <section id="tab-tabela" hidden>
@@ -529,7 +562,7 @@ const KEY = 'simulador-ppc-dcj-sr-v1';
 const DEF_CFG = {optExig:240, blocoUCE:120, tetoSala:300, durMin:10, cargaMin:3700, perMax:15, matMax:null};
 const clone = o => JSON.parse(JSON.stringify(o));
 let S = carregar();
-const UI = {tab:'grade', sel:null, links:false, crit:false, ligar:false, de:null};
+const UI = {tab:'grade', sel:null, links:false, crit:false, ligar:false, de:null, alertas:[], fimArrasto:0};
 try { const t = localStorage.getItem(KEY + '-tab'); if (t) UI.tab = t; } catch(e){}
 
 function carregar(){
@@ -554,7 +587,39 @@ function curto(n){ return n.replace(/Serviço de Assistência e Assessoria Jurí
 
 let R = null, V = null;
 function recalc(){ R = calc(P()); V = verificacoes(P(), R); }
-function mudou(){ recalc(); salvar(); render(); }
+/* avisar = false nas trocas de proposta (selecionar, duplicar, excluir, restaurar, importar) */
+function mudou(avisar = true){
+  const antes = R ? problemas(R) : new Map();
+  recalc(); salvar();
+  const agora = problemas(R);
+  const novos = avisar ? [...agora.keys()].filter(k => !antes.has(k)).map(k => agora.get(k)) : [];
+  UI.alertas = avisar ? novos.concat(UI.alertas.filter(a => a.k && agora.has(a.k) && !novos.some(n => n.k === a.k))) : [];
+  render();
+}
+
+/* ---------- avisos de problemas novos ---------- */
+function problemas(R){
+  const m = new Map(), nm = id => (R.M[id] ? R.M[id].n : id), add = (k, grau, msg, fonte) => m.set(k, {k, grau, msg, fonte});
+  R.art33.forEach(([a, b]) => {
+    const pa = +R.M[a].p, pb = +R.M[b].p;
+    add('art33:' + a + '>' + b, 'bad', pa === pb ? nm(b) + ' está no mesmo período (' + pb + 'º) de seu pré-requisito ' + nm(a) + '.'
+      : nm(b) + ' (' + pb + 'º período) está antes de seu pré-requisito ' + nm(a) + ' (' + pa + 'º período).', 'RGG, art. 33, § 1º');
+  });
+  if (R.A.ciclo) add('ciclo', 'bad', 'Os pré-requisitos formam um ciclo, envolvendo ' + nm(R.A.ciclo) + '.', 'RGG, art. 33, § 1º');
+  else if (R.A.max < R.durMin) add('dur:' + R.A.max, 'bad', 'A cadeia mais longa de pré-requisitos cai para ' + R.A.max + ' períodos, abaixo da duração mínima de ' + R.durMin + '.', 'Res. CNE/CES 2/2007, art. 2º, III, "d"');
+  R.salaAcima.forEach(x => add('sala:' + x.p + ':' + x.sala, 'warn', 'O ' + x.p + 'º período fica com ' + fmt(x.sala) + ' h em sala, acima do teto de ' + fmt(num(P().cfg.tetoSala)) + ' h.', 'diretriz do NDE'));
+  R.semNivel.forEach(([a, b]) => add('nivel:' + a + '>' + b, 'warn', nm(b) + ' depende de ' + nm(a) + ', que ficou sem período.', 'RGG, art. 33, § 1º'));
+  R.foraDoNucleo.forEach(x => add('fora:' + x.p + '>' + x.c, 'warn', nm(x.c) + ' depende de ' + nm(x.p) + ', que não é obrigatório.', 'RGG, art. 33, § 1º'));
+  return m;
+}
+function renderAlertas(){
+  const box = $('alertas'), L = UI.alertas;
+  box.hidden = !L.length; if (!L.length){ box.innerHTML = ''; return; }
+  box.classList.toggle('so-warn', L.every(a => a.grau === 'warn'));
+  box.innerHTML = '<div class="cab"><b>' + (L.length > 1 ? 'Atenção a estes pontos' : 'Atenção') + '</b><button type="button" class="ghost" id="alFechar">Fechar aviso</button></div>' +
+    '<ul>' + L.map(a => '<li class="' + a.grau + '">' + esc(a.msg) + (a.fonte ? ' <span class="fonte">(' + esc(a.fonte) + ')</span>' : '') + '</li>').join('') + '</ul>';
+  $('alFechar').onclick = () => { UI.alertas = []; renderAlertas(); };
+}
 
 /* ---------- aviso e confirmação ---------- */
 let tToast = null;
@@ -615,7 +680,8 @@ function cardHTML(c, cls){
   const bar = c.tipo === 'ac' ? '<i class="p" style="flex:1;opacity:.35"></i>' :
     (t ? '<i class="t" style="flex:' + t + '"></i>' : '') + (p ? '<i class="p" style="flex:' + p + '"></i>' : '') + (e ? '<i class="e" style="flex:' + e + '"></i>' : '');
   const ativ = c.nat === 'aoc' || c.nat === 'aoi';
-  return '<button type="button" class="card' + (ativ ? ' ativ' : '') + ' ' + cls + '" data-id="' + esc(c.id) + '" title="' + esc(c.n) + '">' +
+  const movel = c.tipo === 'obr' || c.tipo === 'opt';
+  return '<button type="button" class="card' + (ativ ? ' ativ' : '') + (movel ? ' movel' : '') + ' ' + cls + '" data-id="' + esc(c.id) + '" title="' + esc(c.n) + '">' +
     '<span class="cn">' + esc(curto(c.n)) + '</span>' +
     '<span class="cm"><span class="badge ' + c.nat + '">' + NAT_CURTO[c.nat] + '</span><span><span class="num">' + ch + ' h</span> · ' + (ch / 15) + ' cr</span></span>' +
     '<span class="tpe">' + bar + '</span></button>';
@@ -638,7 +704,7 @@ function renderGrade(){
   for (let p = 1; p <= 10; p++){
     const x = R.per[p - 1], teto = num(cfg.tetoSala) || 300;
     const w = Math.min(100, x.sala / teto * 100);
-    h += '<div class="col"><div class="colhead"><span class="t">' + p + 'º período</span>' +
+    h += '<div class="col" data-drop="' + p + '"><div class="colhead"><span class="t">' + p + 'º período</span>' +
       '<span class="m">' + x.sala + ' h em sala' + (x.orient ? ' + ' + x.orient + ' h orient.' : '') + '</span>' +
       '<span class="meter" title="Horas em sala em relação ao teto de ' + teto + ' h"><b class="' + (x.sala > teto ? 'over' : '') + '" style="width:' + w + '%"></b></span></div>' +
       C.filter(c => c.tipo === 'obr' && +c.p === p).sort((a, b) => emSala(b) - emSala(a) || ord(a, b)).map(c => cardHTML(c, clsDe(c))).join('') + '</div>';
@@ -646,9 +712,9 @@ function renderGrade(){
   const semPer = C.filter(c => c.tipo === 'obr' && !(+c.p > 0));
   const banco = C.filter(c => c.tipo === 'opt').sort(ord);
   const rub = C.filter(c => c.tipo === 'ac' || c.tipo === 'apr');
-  h += '<div class="col"><div class="colhead"><span class="t">Sem período fixo</span><span class="m">obrigatórios</span></div>' + semPer.map(c => cardHTML(c, clsDe(c))).join('') +
+  h += '<div class="col" data-drop="sem"><div class="colhead"><span class="t">Sem período fixo</span><span class="m">obrigatórios</span></div>' + semPer.map(c => cardHTML(c, clsDe(c))).join('') +
        '<div class="colhead" style="margin-top:10px"><span class="t">Aproveitamento</span><span class="m">' + fmt(R.acCH + R.aprCH) + ' h</span></div>' + rub.map(c => cardHTML(c, clsDe(c))).join('') + '</div>';
-  h += '<div class="col"><div class="colhead"><span class="t">Banco de optativas</span><span class="m">exigidas ' + fmt(R.optExig) + ' h · bloco UCE ' + fmt(R.bloco) + ' h</span></div>' + banco.map(c => cardHTML(c, clsDe(c))).join('') + '</div>';
+  h += '<div class="col" data-drop="banco"><div class="colhead"><span class="t">Banco de optativas</span><span class="m">exigidas ' + fmt(R.optExig) + ' h · bloco UCE ' + fmt(R.bloco) + ' h</span></div>' + banco.map(c => cardHTML(c, clsDe(c))).join('') + '</div>';
   B.innerHTML = h;
   B.classList.toggle('ligando', UI.ligar);
   ['Links', 'Crit', 'Ligar'].forEach(k => { const on = UI[k.toLowerCase()]; $('ck' + k).checked = on; $('tg' + k).classList.toggle('on', on); });
@@ -743,15 +809,8 @@ function ligarEditor(box, c, aoMudar){
 }
 function renderDetalhe(){
   const box = $('detalhe'), c = UI.sel ? comp(UI.sel) : null;
-  if (!c){
-    box.innerHTML = '<h2>Como usar</h2>' +
-      '<p class="hint">Clique num componente para ver a linha de pré-requisitos: em azul, o que ele exige; em roxo, o que depende dele. Os demais ficam esmaecidos.</p>' +
-      '<p class="hint">Com o <b>Modo ligação</b> ativo, clique primeiro no pré-requisito e depois no componente que passa a exigi-lo. Clicar de novo no mesmo par desfaz a ligação.</p>' +
-      '<p class="hint">Os indicadores do topo e a aba Conformidade são recalculados a cada alteração. As propostas ficam guardadas neste navegador; use Exportar para levá-las a outro computador ou enviá-las a colegas.</p>' +
-      '<div><button type="button" class="primary" id="btnAddG">Adicionar componente</button></div>';
-    $('btnAddG').onclick = adicionar;
-    return;
-  }
+  box.hidden = !c; $('gradeLayout').classList.toggle('com-painel', !!c);
+  if (!c){ box.innerHTML = ''; return; }
   box.innerHTML = '<div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><h2>Componente</h2><button type="button" class="ghost" id="ed-x">Fechar</button></div>' + editorHTML(c);
   $('ed-x').onclick = () => { UI.sel = null; render(); };
   ligarEditor(box, c, mudou);
@@ -942,7 +1001,7 @@ function importarTexto(txt){
     if (S.props.some(x => x.id === p.id)) p.id = novoId('p');
     S.props.push(p);
   });
-  S.ativo = novas[0].id; UI.sel = null; mudou();
+  S.ativo = novas[0].id; UI.sel = null; mudou(false);
   toast(novas.length + ' proposta(s) importada(s)');
   return true;
 }
@@ -956,8 +1015,8 @@ function importar(){
 
 /* ---------- ações do cabeçalho ---------- */
 function ligarTopo(){
-  $('selProp').onchange = e => { S.ativo = e.target.value; UI.sel = null; UI.de = null; mudou(); };
-  $('btnDup').onclick = () => { const n = clone(P()); n.id = novoId('p'); n.nome = P().nome + ' (cópia)'; S.props.push(n); S.ativo = n.id; mudou(); toast('Proposta duplicada'); };
+  $('selProp').onchange = e => { S.ativo = e.target.value; UI.sel = null; UI.de = null; mudou(false); };
+  $('btnDup').onclick = () => { const n = clone(P()); n.id = novoId('p'); n.nome = P().nome + ' (cópia)'; S.props.push(n); S.ativo = n.id; mudou(false); toast('Proposta duplicada'); };
   $('btnRen').onclick = () => modal('Renomear proposta', '<label class="f" for="rnN" style="display:flex;flex-direction:column;gap:4px">Nome<input type="text" id="rnN"></label><label class="f" for="rnS" style="display:flex;flex-direction:column;gap:4px">Descrição<input type="text" id="rnS"></label><div class="acts"><button type="button" id="rnC">Cancelar</button><button type="button" class="primary" id="rnOk">Salvar</button></div>', fechar => {
     $('rnN').value = P().nome; $('rnS').value = P().sub || ''; $('rnN').focus();
     $('rnC').onclick = fechar;
@@ -965,9 +1024,9 @@ function ligarTopo(){
   });
   $('btnDel').onclick = () => {
     if (S.props.length < 2){ toast('Mantenha ao menos uma proposta'); return; }
-    confirmar('Excluir a proposta "' + P().nome + '" deste navegador?', 'Excluir', () => { S.props = S.props.filter(p => p.id !== S.ativo); S.ativo = S.props[0].id; UI.sel = null; mudou(); toast('Proposta excluída'); });
+    confirmar('Excluir a proposta "' + P().nome + '" deste navegador?', 'Excluir', () => { S.props = S.props.filter(p => p.id !== S.ativo); S.ativo = S.props[0].id; UI.sel = null; mudou(false); toast('Proposta excluída'); });
   };
-  $('btnRes').onclick = () => confirmar('Substituir todas as propostas deste navegador pela proposta de trabalho original? As alterações e as cópias feitas aqui serão perdidas.', 'Restaurar', () => { S = {props:clone(SEED), ativo:SEED[0].id}; UI.sel = null; mudou(); toast('Proposta original restaurada'); });
+  $('btnRes').onclick = () => confirmar('Substituir todas as propostas deste navegador pela proposta de trabalho original? As alterações e as cópias feitas aqui serão perdidas.', 'Restaurar', () => { S = {props:clone(SEED), ativo:SEED[0].id}; UI.sel = null; mudou(false); toast('Proposta original restaurada'); });
   $('btnExp').onclick = exportar;
   $('btnImp').onclick = importar;
   document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { UI.tab = b.dataset.tab; try { localStorage.setItem(KEY + '-tab', UI.tab); } catch(e){} render(); });
@@ -975,8 +1034,14 @@ function ligarTopo(){
   $('ckCrit').onchange = e => { UI.crit = e.target.checked; renderGrade(); };
   $('ckLigar').onchange = e => { UI.ligar = e.target.checked; UI.de = null; renderGrade(); if (UI.ligar) toast('Clique no pré-requisito e depois no componente que o exige'); };
   $('btnAddT').onclick = adicionar;
+  $('btnAddG').onclick = adicionar;
+  const aj = $('ajuda');
+  try { if (localStorage.getItem(KEY + '-ajuda') === 'fechada') aj.open = false; } catch(e){}
+  aj.addEventListener('toggle', () => { try { localStorage.setItem(KEY + '-ajuda', aj.open ? 'aberta' : 'fechada'); } catch(e){} requestAnimationFrame(desenharLigacoes); });
+  ligarArrasto();
   $('board').addEventListener('click', e => {
     const el = e.target.closest('.card'); if (!el) return;
+    if (Date.now() - UI.fimArrasto < 350) return;
     const id = el.dataset.id;
     if (UI.ligar){
       if (!UI.de){ UI.de = id; renderGrade(); return; }
@@ -993,8 +1058,93 @@ function ligarTopo(){
   let tRz = null; window.addEventListener('resize', () => { clearTimeout(tRz); tRz = setTimeout(desenharLigacoes, 120); });
 }
 
+/* ---------- arrastar componentes entre períodos ---------- */
+function destinoDe(alvo){ return alvo === 'banco' ? {tipo:'opt', p:0} : alvo === 'sem' ? {tipo:'obr', p:0} : {tipo:'obr', p:+alvo}; }
+/* Conflitos com o art. 33, § 1º, do RGG se c for para o período p como obrigatório */
+function conflitosPeriodo(c, p){
+  const out = []; if (!(p > 0)) return out;
+  (c.pre || []).forEach(id => { const x = comp(id); if (x && x.tipo === 'obr' && +x.p > 0 && +x.p >= p) out.push('seu pré-requisito ' + x.n + ' está no ' + x.p + 'º período'); });
+  P().comps.forEach(x => { if (x.id !== c.id && x.tipo === 'obr' && (x.pre || []).includes(c.id) && +x.p > 0 && +x.p <= p) out.push('ele é pré-requisito de ' + x.n + ', que está no ' + x.p + 'º período'); });
+  return out;
+}
+function soltar(id, alvo){
+  const c = comp(id); if (!c) return;
+  const d = destinoDe(alvo);
+  if (c.tipo === d.tipo && (+c.p || 0) === d.p) return;
+  const nomeDest = d.tipo === 'opt' ? 'o banco de optativas' : d.p ? 'o ' + d.p + 'º período' : '"sem período fixo"';
+  const conf = conflitosPeriodo(c, d.p);
+  if (conf.length){
+    UI.alertas = [{k:null, grau:'bad', msg:'Não foi possível mover ' + c.n + ' para ' + nomeDest + ': ' + conf.join('; ') + '. O pré-requisito precisa estar em período anterior ao do componente que o exige.', fonte:'RGG, art. 33, § 1º'}];
+    renderAlertas(); return;
+  }
+  c.tipo = d.tipo; c.p = d.p;
+  mudou(); toast(c.n + ' movido para ' + nomeDest);
+}
+function ligarArrasto(){
+  const B = $('board'), wrap = B.parentElement;
+  let st = null;
+  const limpar = () => {
+    if (!st) return;
+    clearTimeout(st.timer); cancelAnimationFrame(st.raf);
+    if (st.fantasma) st.fantasma.remove();
+    if (st.el) st.el.classList.remove('arrastando');
+    B.querySelectorAll('.col.alvo').forEach(x => x.classList.remove('alvo', 'proibido'));
+    st = null;
+  };
+  const iniciar = () => {
+    st.ativo = true;
+    const r = st.el.getBoundingClientRect();
+    st.dx = st.x - r.left; st.dy = st.y - r.top;
+    const g = st.el.cloneNode(true); g.classList.add('fantasma'); g.classList.remove('sel', 'anc', 'desc', 'dim', 'crit', 'erro', 'de');
+    g.style.width = r.width + 'px'; g.style.left = r.left + 'px'; g.style.top = r.top + 'px';
+    document.body.appendChild(g); st.fantasma = g;
+    st.el.classList.add('arrastando');
+    if (navigator.vibrate && st.tipo !== 'mouse') try { navigator.vibrate(15); } catch(e){}
+    const rolar = () => {
+      if (!st || !st.ativo) return;
+      const w = wrap.getBoundingClientRect(), m = 48;
+      if (st.x < w.left + m) wrap.scrollLeft -= 14; else if (st.x > w.right - m) wrap.scrollLeft += 14;
+      st.raf = requestAnimationFrame(rolar);
+    };
+    st.raf = requestAnimationFrame(rolar);
+  };
+  const mover = (x, y) => {
+    st.x = x; st.y = y;
+    st.fantasma.style.left = (x - st.dx) + 'px'; st.fantasma.style.top = (y - st.dy) + 'px';
+    const hit = document.elementFromPoint(x, y), col = hit ? hit.closest('#board .col[data-drop]') : null;
+    B.querySelectorAll('.col.alvo').forEach(el => { if (el !== col) el.classList.remove('alvo', 'proibido'); });
+    if (col){ col.classList.add('alvo'); col.classList.toggle('proibido', conflitosPeriodo(comp(st.id), destinoDe(col.dataset.drop).p).length > 0); }
+    st.col = col;
+  };
+  B.addEventListener('pointerdown', e => {
+    if (UI.ligar || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    const el = e.target.closest('.card.movel'); if (!el) return;
+    limpar();
+    st = {id: el.dataset.id, el, x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY, tipo: e.pointerType, ativo: false};
+    if (e.pointerType !== 'mouse') st.timer = setTimeout(() => { if (st && !st.ativo) iniciar(); }, 380);
+  });
+  window.addEventListener('pointermove', e => {
+    if (!st) return;
+    if (!st.ativo){
+      const dist = Math.hypot(e.clientX - st.x0, e.clientY - st.y0);
+      if (st.tipo === 'mouse'){ if (dist > 6){ st.x = e.clientX; st.y = e.clientY; iniciar(); } else return; }
+      else { if (dist > 10) limpar(); return; }
+    }
+    e.preventDefault(); mover(e.clientX, e.clientY);
+  }, {passive:false});
+  window.addEventListener('pointerup', () => {
+    if (!st) return;
+    if (st.ativo){ const id = st.id, col = st.col; UI.fimArrasto = Date.now(); limpar(); if (col) soltar(id, col.dataset.drop); }
+    else limpar();
+  });
+  window.addEventListener('pointercancel', limpar);
+  B.addEventListener('touchmove', e => { if (st && st.ativo) e.preventDefault(); }, {passive:false});
+  B.addEventListener('contextmenu', e => { if (st) e.preventDefault(); });
+  window.addEventListener('keydown', e => { if (e.key === 'Escape' && st && st.ativo){ UI.fimArrasto = Date.now(); limpar(); } });
+}
+
 function render(){
-  renderTopo(); renderAbas();
+  renderTopo(); renderAbas(); renderAlertas();
   if (UI.tab === 'grade'){ renderGrade(); renderDetalhe(); }
   if (UI.tab === 'tabela') renderTabela();
   if (UI.tab === 'conf') renderConf();

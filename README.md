@@ -8,6 +8,7 @@ Os dados carregados são propostas de trabalho. Nenhuma delas representa deliber
 
 - Mostra a grade por período e destaca a linha de pré-requisitos de cada componente: o que ele exige e o que depende dele.
 - Permite ligar e desligar pré-requisitos clicando nos componentes ("Modo ligação").
+- Permite arrastar os componentes de um período para outro. O simulador recusa o arrasto que poria um componente no mesmo período de seu pré-requisito, ou antes dele, e avisa quando uma alteração cria problema novo, como período acima do teto de horas em sala.
 - Registra, para cada componente, a carga horária teórica, prática e de extensão, com os créditos correspondentes (1 crédito = 15 h).
 - Calcula os totais por categoria do histórico escolar: componentes obrigatórios, optativos, atividades complementares e extensão por aproveitamento.
 - Verifica a conformidade da proposta, separando exigências normativas de diretrizes do NDE.
