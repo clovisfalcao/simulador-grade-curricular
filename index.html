@@ -258,10 +258,11 @@ tfoot td{font-weight:600; background:var(--surface-2)}
         <div class="ajuda-itens">
           <p><b>Ver pré-requisitos.</b> Clique num componente: em laranja, o que ele exige; em roxo, o que depende dele. O painel de edição abre ao lado.</p>
           <p><b>Mudar de período.</b> Arraste o componente para outro período ou para o banco de optativas. No celular, toque e segure antes de arrastar.</p>
-          <p><b>Optativas.</b> Ficam no banco, fora das colunas, porque o estudante as cursa em qualquer período. Cada uma pertence ao período seguinte ao de seu pré-requisito mais adiantado, obrigatório ou optativo; sem pré-requisito, ao 1º.</p>
+          <p><b>Optativas.</b> Ficam no banco, fora das colunas, porque o estudante as cursa em qualquer período. Cada uma pertence ao período seguinte ao de seu pré-requisito mais adiantado, obrigatório ou optativo; sem pré-requisito, ao período 0. O banco lista do período 0 ao 10º.</p>
           <p><b>Ligar pré-requisitos.</b> Com o Modo ligação ativo, clique no pré-requisito e depois no componente que passa a exigi-lo. Repetir o par desfaz a ligação.</p>
           <p><b>Recalcular e guardar.</b> Indicadores e Conformidade são recalculados a cada alteração, e os problemas novos aparecem num aviso acima. As propostas ficam neste navegador; use Exportar para levá-las a outro computador.</p>
         </div>
+        <p class="foot" style="margin-top:6px">Pendência: confirmar com os setores da UFPB como se computa a extensão cursada em optativas (bloco de UCE optativas).</p>
       </details>
       <div class="grade-layout" id="gradeLayout">
       <div style="min-width:0">
@@ -380,18 +381,18 @@ function calc(P){
   obr.forEach(c => (c.pre || []).forEach(p => { if (O[p]) edges.push([p, c.id]); else foraDoNucleo.push({c:c.id, p}); }));
 
   /* período das optativas (regra da UFPB): o seguinte ao do pré-requisito mais adiantado, obrigatório ou optativo;
-     sem pré-requisito, o 1º. As optativas ficam fora das colunas e não entram nas somas por período. */
+     sem pré-requisito, período 0. As optativas ficam fora das colunas e não entram nas somas por período. */
   const optPer = {};
   function perOpt(c, vis){
     if (optPer[c.id]) return optPer[c.id].p;
-    if (vis[c.id]) return 1; vis[c.id] = 1;
-    let ult = 0, via = null;
+    if (vis[c.id]) return 0; vis[c.id] = 1;
+    let ult = -1, via = null;
     (c.pre || []).forEach(id => {
       const x = M[id]; if (!x) return;
       const px = x.tipo === 'opt' ? perOpt(x, vis) : (+x.p || 0);
       if (px > ult){ ult = px; via = id; }
     });
-    optPer[c.id] = via ? {p: Math.min(10, ult + 1), via, pv: ult} : {p: 1, via: null};
+    optPer[c.id] = via ? {p: Math.min(10, ult + 1), via, pv: ult} : {p: 0, via: null};
     return optPer[c.id].p;
   }
   opt.forEach(c => perOpt(c, {}));
@@ -703,10 +704,17 @@ function descendentes(id){
   return out;
 }
 function perDe(x){ return x.tipo === 'opt' ? (R.optPer[x.id] || {}).p : (+x.p || 0); }
+function perTxt(p){ return p > 0 ? p + 'º período' : 'período 0'; }
+/* rótulo curto do período de um componente, para as listas do painel */
+function perChip(x){
+  const p = perDe(x);
+  if (x.tipo === 'opt') return ' <span class="muted">(optativa, ' + (p > 0 ? p + 'º' : 'período 0') + ')</span>';
+  return p ? ' <span class="muted">(' + p + 'º)</span>' : '';
+}
 function optRotulo(c){
   const o = R.optPer[c.id]; if (!o) return '';
-  const tit = o.via ? 'Pré-requisito mais adiantado: ' + R.M[o.via].n + ' (' + o.pv + 'º período)' : 'Sem pré-requisito';
-  return '<span class="perlbl" title="' + esc(tit) + '">' + o.p + 'º período</span>';
+  const tit = o.via ? 'Pré-requisito mais adiantado: ' + R.M[o.via].n + ' (' + perTxt(o.pv) + ')' : 'Sem pré-requisito: pode ser cursada em qualquer período';
+  return '<span class="perlbl" title="' + esc(tit) + '">' + perTxt(o.p) + '</span>';
 }
 function cardHTML(c, cls){
   const ch = chOf(c), t = num(c.teo), p = num(c.prat), e = num(c.ext);
@@ -751,7 +759,7 @@ function renderGrade(){
        (semPer.length ? semPer.map(c => cardHTML(c, clsDe(c))).join('') : '<p class="vazio">Nenhum.</p>') +
        '<div class="colhead" style="margin-top:10px"><span class="t">Aproveitamento</span><span class="m">' + fmt(R.acCH + R.aprCH) + ' h</span></div>' + rub.map(c => cardHTML(c, clsDe(c))).join('') + '</div>';
   h += '<div class="col" data-drop="banco"><div class="colhead"><span class="t">Banco de optativas</span><span class="m">exigidas ' + fmt(R.optExig) + ' h · bloco UCE ' + fmt(R.bloco) + ' h · período pelo pré-requisito</span></div>' +
-       banco.map((c, i) => { const p = R.optPer[c.id].p, ant = i ? R.optPer[banco[i - 1].id].p : 0; return (p !== ant ? '<p class="grp-opt">' + p + 'º período</p>' : '') + cardHTML(c, clsDe(c)); }).join('') + '</div>';
+       banco.map((c, i) => { const p = R.optPer[c.id].p, ant = i ? R.optPer[banco[i - 1].id].p : null; return (p !== ant ? '<p class="grp-opt">' + (p > 0 ? perTxt(p) : 'Período 0 · sem pré-requisito') + '</p>' : '') + cardHTML(c, clsDe(c)); }).join('') + '</div>';
   B.innerHTML = h;
   B.classList.toggle('ligando', UI.ligar);
   ['Links', 'Crit', 'Ligar'].forEach(k => { const on = UI[k.toLowerCase()]; $('ck' + k).checked = on; $('tg' + k).classList.toggle('on', on); });
@@ -797,7 +805,7 @@ function editorHTML(c){
     '<label class="f">Tipo<select id="ed-tipo" data-f="tipo">' + opcoes(TIPO, c.tipo) + '</select></label>' +
     '<label class="f">Natureza<select id="ed-nat" data-f="nat">' + opcoes(NAT, c.nat) + '</select></label>' +
     '<label class="f">Eixo<select id="ed-eixo" data-f="eixo">' + opcoes(EIXO, c.eixo) + '</select></label>' +
-    (o ? '<div class="f" style="display:flex;flex-direction:column;gap:3px;font-size:.76rem;color:var(--muted)">Período<span style="color:var(--ink);font-size:.86rem">' + o.p + 'º, ' + (o.via ? 'após ' + esc(R.M[o.via].n) + ' (' + o.pv + 'º)' : 'sem pré-requisito') + '</span></div>'
+    (o ? '<div class="f" style="display:flex;flex-direction:column;gap:3px;font-size:.76rem;color:var(--muted)">Período<span style="color:var(--ink);font-size:.86rem">' + (o.via ? o.p + 'º, após ' + esc(R.M[o.via].n) + ' (' + perTxt(o.pv) + ')' : 'Período 0, sem pré-requisito') + '</span></div>'
        : '<label class="f">Período<select id="ed-p" data-f="p">' + perOpts + '</select></label>') +
     (ac ? '<label class="f full">Carga horária<input type="number" id="ed-ch" data-f="ch" min="0" step="15" value="' + num(c.ch) + '"></label>' :
     '<div class="full ch3">' +
@@ -812,10 +820,10 @@ function editorHTML(c){
     '<label class="f full">Observação<textarea id="ed-obs" data-f="obs" rows="2">' + esc(c.obs || '') + '</textarea></label>' +
     '</div>' +
     '<div class="sec"><h3>Pré-requisitos</h3><div class="chips">' +
-      ((c.pre || []).length ? c.pre.map(p => { const x = R.M[p]; return '<div class="chip"><span class="nm">' + esc(x ? x.n : p) + (x && perDe(x) ? ' <span class="muted">(' + perDe(x) + 'º' + (x.tipo === 'opt' ? ', optativa' : '') + ')</span>' : '') + '</span><span class="acts"><label class="chk"><input type="checkbox" data-ded="' + esc(p) + '"' + ((c.ded || []).includes(p) ? ' checked' : '') + '> deduzido</label><button type="button" class="ghost" data-rm="' + esc(p) + '" aria-label="Remover pré-requisito">✕</button></span></div>'; }).join('') : '<p class="foot">Nenhum.</p>') +
+      ((c.pre || []).length ? c.pre.map(p => { const x = R.M[p]; return '<div class="chip"><span class="nm">' + esc(x ? x.n : p) + (x ? perChip(x) : '') + '</span><span class="acts"><label class="chk"><input type="checkbox" data-ded="' + esc(p) + '"' + ((c.ded || []).includes(p) ? ' checked' : '') + '> deduzido</label><button type="button" class="ghost" data-rm="' + esc(p) + '" aria-label="Remover pré-requisito">✕</button></span></div>'; }).join('') : '<p class="foot">Nenhum.</p>') +
     '</div><label class="f" style="display:flex;flex-direction:column;gap:3px;font-size:.76rem;color:var(--muted)">Acrescentar pré-requisito<select id="ed-add" style="width:100%"><option value="">Escolher componente</option>' +
       outros.map(x => '<option value="' + esc(x.id) + '">' + (+x.p > 0 ? x.p + 'º · ' : (x.tipo === 'opt' ? 'opt. · ' : '')) + esc(x.n) + '</option>').join('') + '</select></label></div>' +
-    '<div class="sec"><h3>É pré-requisito de</h3>' + (dep.length ? '<div class="chips">' + dep.map(x => '<div class="chip"><span class="nm">' + esc(x.n) + (perDe(x) ? ' <span class="muted">(' + perDe(x) + 'º' + (x.tipo === 'opt' ? ', optativa' : '') + ')</span>' : '') + '</span></div>').join('') + '</div>' : '<p class="foot">Nenhum componente.</p>') + '</div>' +
+    '<div class="sec"><h3>É pré-requisito de</h3>' + (dep.length ? '<div class="chips">' + dep.map(x => '<div class="chip"><span class="nm">' + esc(x.n) + perChip(x) + '</span></div>').join('') + '</div>' : '<p class="foot">Nenhum componente.</p>') + '</div>' +
     '<div><button type="button" class="danger" id="ed-del">Excluir componente</button></div>';
 }
 function ligarEditor(box, c, aoMudar){
@@ -827,7 +835,7 @@ function ligarEditor(box, c, aoMudar){
     } else if (f === 'bas' || f === 'a13') c[f] = el.checked;
     else if (['teo', 'prat', 'ext', 'ch', 'p'].includes(f)) c[f] = Math.max(0, num(el.value));
     else if (f === 'tipo'){
-      if (c.tipo === 'opt' && el.value === 'obr') c.p = R.optPer[c.id].p;
+      if (c.tipo === 'opt' && el.value === 'obr') c.p = R.optPer[c.id].p || 1;
       c.tipo = el.value;
       if (c.tipo === 'ac'){ c.ch = chOf(Object.assign({}, c, {tipo:'obr'})) || 120; c.nat = 'apr'; c.eixo = 'ac'; c.p = 0; }
       if (c.tipo === 'apr'){ c.nat = 'apr'; c.p = 0; }
@@ -879,7 +887,7 @@ function renderTabela(){
         '<td><input type="text" data-id="' + esc(c.id) + '" data-f="n" id="t-n-' + esc(c.id) + '" value="' + esc(c.n) + '" aria-label="Nome"></td>' +
         '<td><select data-id="' + esc(c.id) + '" data-f="nat" id="t-nat-' + esc(c.id) + '" aria-label="Natureza">' + opcoes(NAT_CURTO, c.nat) + '</select></td>' +
         '<td><select data-id="' + esc(c.id) + '" data-f="eixo" id="t-eixo-' + esc(c.id) + '" aria-label="Eixo">' + opcoes(EIXO, c.eixo) + '</select></td>' +
-        '<td>' + (t === 'obr' ? per : t === 'opt' ? '<span class="muted" title="Pelo pré-requisito">' + R.optPer[c.id].p + 'º</span>' : '<span class="muted">—</span>') + '</td>' +
+        '<td>' + (t === 'obr' ? per : t === 'opt' ? '<span class="muted" title="Pelo pré-requisito">' + (R.optPer[c.id].p > 0 ? R.optPer[c.id].p + 'º' : '0') + '</span>' : '<span class="muted">—</span>') + '</td>' +
         cell(c, 'teo') + cell(c, 'prat') +
         (c.tipo === 'ac' ? '<td class="c muted">—</td>' : '<td class="c"><input type="checkbox" data-id="' + esc(c.id) + '" data-f="isext" id="t-isext-' + esc(c.id) + '"' + (num(c.ext) ? ' checked' : '') + ' aria-label="Componente de extensão"></td>') +
         cell(c, 'ext') +

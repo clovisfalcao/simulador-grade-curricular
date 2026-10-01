@@ -11,7 +11,7 @@ Os dados carregados são propostas de trabalho. Nenhuma delas representa deliber
 - Permite arrastar os componentes de um período para outro. O simulador recusa o arrasto que poria um componente no mesmo período de seu pré-requisito, ou antes dele, e avisa quando uma alteração cria problema novo, como período acima do teto de horas em sala.
 - Registra, para cada componente, a carga horária teórica, prática e de extensão, com os créditos correspondentes (1 crédito = 15 h).
 - Calcula os totais por categoria do histórico escolar: componentes obrigatórios, optativos, atividades complementares e extensão por aproveitamento.
-- Mostra as optativas fora das colunas de períodos, no banco, com o período a que cada uma pertence: o seguinte ao de seu pré-requisito mais adiantado, obrigatório ou optativo, ou o 1º se não houver pré-requisito.
+- Mostra as optativas fora das colunas de períodos, no banco, com o período a que cada uma pertence: o seguinte ao de seu pré-requisito mais adiantado, obrigatório ou optativo, ou o período 0 se não houver pré-requisito. O banco lista as optativas do período 0 ao 10º.
 - Verifica a conformidade da proposta, separando exigências normativas de diretrizes do NDE.
 - Compara a proposta de trabalho com as cópias alteradas a partir dela.
 
