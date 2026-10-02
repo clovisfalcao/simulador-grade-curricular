@@ -8,7 +8,7 @@ O curso de Bacharelado em Direito de Santa Rita (Departamento de Ciências Jurí
 
 Existe um simulador anterior, feito por um professor do NDE: <https://hugobelmorais-oss.github.io/simulador-ppc-dcj/> (repositório `hugobelmorais-oss/simulador-ppc-dcj`). Ele soma cargas horárias por período e por natureza e verifica apenas a faixa de extensão. Este aplicativo foi criado para cobrir o que aquele não cobre: pré-requisitos, duração mínima, decomposição da carga horária e as demais exigências normativas.
 
-O aplicativo abre com uma única **proposta de trabalho**, sem data no nome: a grade revisada após a reunião do NDE (antes chamada "Versão de 19.09.2026"). A proposta de 18.09.2026 foi retirada dos dados de partida a pedido do usuário. As alterações são feitas a partir da proposta de trabalho; para testar alternativas, duplica-se a proposta. Nenhuma proposta foi deliberada pelo NDE ou pelo Colegiado. Isso precisa continuar claro em qualquer texto do aplicativo ou do repositório.
+O aplicativo traz duas propostas de partida. A **Proposta de trabalho** (id `base`, antes chamada "Versão de 19.09.2026") é a versão padrão: abre selecionada e aparece como "(padrão)" no seletor. A **Versão anterior** (id `anterior`) reproduz o "Estudo preliminar da grade" discutido na reunião do NDE de 18.09.2026, fiel ao documento, e serve de alternativa para comparação, com as mesmas verificações. As alterações são feitas a partir da proposta de trabalho; para testar alternativas, duplica-se a proposta. Nenhuma proposta foi deliberada pelo NDE ou pelo Colegiado. Isso precisa continuar claro em qualquer texto do aplicativo ou do repositório.
 
 ## 2. Finalidade
 
@@ -69,7 +69,8 @@ O estado é `{props: [proposta, ...], ativo: id}`. Não há salvamento automáti
 | `ded` | Ids dos pré-requisitos deduzidos das ementas, sem indicação expressa em documento |
 | `bas` | Conta como conteúdo básico profissional |
 | `a13` | Conta no teto de atividades complementares e prática jurídica |
-| `obs` | Observação livre |
+| `obs` | Observação livre, exibida no painel |
+| `ref` | Referência interna aos documentos de trabalho; não é exibida |
 
 Convenções: disciplinas têm carga integralmente teórica; atividades de orientação têm carga integralmente prática; unidades curriculares de extensão têm carga integralmente extensionista. Um crédito equivale a 15 h. Só disciplina e módulo ocupam dia no horário (RGG, art. 38, § 1º).
 
@@ -106,6 +107,8 @@ Ficam no bloco "núcleo de cálculo", nas funções `calc(P)` e `verificacoes(P,
 | Pré-requisito em nível anterior | RGG, art. 33, § 1º |
 | Extensão apenas por disciplina, módulo ou UCE | Res. CONSEPE 02/2022, art. 7º |
 
+Cada verificação guarda, no campo `ref`, o código interno dos documentos de trabalho do NDE (H1, I3, D1 etc.). Esse campo nunca é exibido: a tela mostra só a fonte legível (norma ou "Diretriz do NDE"), porque quem opera o aplicativo não tem acesso a esses documentos. O mesmo vale para o campo `ref` dos componentes.
+
 **Diretrizes do NDE**: teto em sala por período; obrigatórios com período; disciplinas obrigatórias com 60 h; componentes numerados (I, II, III) em períodos seguidos, com as UCE dispensadas; Penal I a III nos mesmos períodos de Civil I a III; cadeia de disciplinas até o último período; elos sem redundância; limites de matrícula; oferta suficiente para o bloco de UCE optativas; vedação de carga de extensão em componente de prática jurídica; créditos inteiros.
 
 A distinção entre norma e diretriz interna é deliberada e deve ser mantida.
@@ -127,21 +130,23 @@ A página segue tema claro e escuro, funciona em tela de celular sem rolagem hor
 
 ## 9. Valores de referência para conferência
 
-Qualquer alteração no núcleo de cálculo deve reproduzir estes resultados com a proposta de trabalho dos dados de partida:
+Qualquer alteração no núcleo de cálculo deve reproduzir estes resultados com os dados de partida:
 
-| Indicador | Proposta de trabalho |
-|---|---:|
-| Carga total | 3.720 h |
-| CH teórica / prática / extensão | 2.760 / 420 / 420 h |
-| Extensão garantida | 11,3% |
-| Extensão máxima com o banco atual | 11,3% |
-| Básicos profissionais | 2.100 h, 56,5% |
-| AC e prática jurídica | 570 h, 15,3% |
-| Cadeia mais longa | 10 períodos |
-| Cadeia só de disciplinas | 10 |
-| Simulação com matrícula máxima | 10 períodos |
-| Elos sensíveis | 3 |
-| Matrícula mínima / máxima | 240 / 420 h |
+| Indicador | Proposta de trabalho | Versão anterior |
+|---|---:|---:|
+| Carga total | 3.720 h | 3.798 h |
+| CH teórica / prática / extensão | 2.760 / 420 / 420 h | 2.820 / 390 / 468 h |
+| Extensão garantida | 11,3% | 12,3% |
+| Extensão máxima com o banco atual | 11,3% | 12,3% |
+| Básicos profissionais | 2.100 h, 56,5% | 2.040 h, 53,7% |
+| AC e prática jurídica | 570 h, 15,3% | 738 h, 19,4% (margem de 22 h) |
+| Cadeia mais longa | 10 períodos | 10 períodos |
+| Cadeia só de disciplinas | 10 | 10 (Laboratórios eram disciplinas) |
+| Simulação com matrícula máxima | 10 períodos | 10 períodos |
+| Elos sensíveis | 3 | 5 |
+| Matrícula mínima / máxima | 240 / 420 h | 255 / 405 h |
+
+A versão anterior segue o documento: Sociologia Jurídica e Direito Previdenciário com esses nomes; Serviço de Assessoria I no 6º período, com pré-requisito em Teoria Geral do Processo, e Serviço II no 7º; UCE-OB III dependente de Processual Civil I e Processual Penal I; Trabalho de Curso como atividade de orientação coletiva, sem período, no bloco de creditação; nenhuma optativa cadastrada, porque o documento não as lista. Os pré-requisitos de UCE-OB I e II e os demais que o documento não detalha vêm da versão original dos dados.
 
 Na proposta de trabalho, as duas cadeias de dez períodos são: Introdução à Teoria do Direito I e II, Direito Civil I e II, Teoria Geral do Processo, Mediação e Arbitragem, Laboratórios I a IV; e Introdução I e II, Direito Civil I a VI, Direito da Criança e do Adolescente, Direito da Seguridade Social. Os três elos sensíveis são os pré-requisitos que ligam Introdução I a Civil II, comuns às duas cadeias.
 

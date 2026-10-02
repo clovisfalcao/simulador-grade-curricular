@@ -31,9 +31,12 @@ Os dados carregados são propostas de trabalho. Nenhuma delas representa deliber
 
 **Diretrizes do NDE**: teto de horas em sala por período, disciplinas obrigatórias com 60 h, componentes numerados em períodos seguidos, Penal acompanhando Civil, cadeia de disciplinas até o último período, pré-requisitos sem redundância, limites de matrícula semestral, oferta para o bloco de UCE optativas, vedação de dupla contagem entre extensão e prática jurídica.
 
-## Proposta incluída
+## Propostas incluídas
 
-O simulador abre com uma única **Proposta de trabalho**: a grade revisada após a reunião do NDE, com os Laboratórios como atividade de orientação coletiva, Direito do Consumidor obrigatório e o novo modelo de extensão. As alterações feitas nela são recalculadas na hora. Para testar alternativas sem perder a base, use **Duplicar** e altere a cópia; a aba Totais compara as propostas quando houver mais de uma. **Restaurar original** volta à proposta de partida.
+- **Proposta de trabalho (padrão)**: grade revisada após a reunião do NDE, com os Laboratórios como atividade de orientação coletiva, Direito do Consumidor obrigatório e o novo modelo de extensão. É a versão que abre por padrão.
+- **Versão anterior**: o estudo preliminar discutido na reunião do NDE de 18 de setembro de 2026, reproduzido para comparação. Passa pelas mesmas verificações, o que mostra o que ele atendia e o que não atendia.
+
+As alterações são recalculadas na hora. Para testar alternativas sem perder a base, use **Duplicar** e altere a cópia; a aba Totais compara as propostas lado a lado. **Restaurar originais** volta às duas propostas de partida.
 
 ## Como usar
 
