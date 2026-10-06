@@ -11,13 +11,14 @@
 <style>
 /* Layout: cabeçalho com a proposta ativa, faixa de indicadores, abas; a aba Grade é um quadro de períodos com rolagem própria e painel de edição ao lado. */
 :root{
-  --bg:#eef1f4; --surface:#ffffff; --surface-2:#f5f7f9; --ink:#16202a; --muted:#566472; --line:#d3dbe3;
-  --accent:#1d4f91; --accent-ink:#ffffff; --accent-soft:#dfe8f5;
-  --teo:#3f63a8; --prat:#b07a12; --ext:#23856a;
-  --anc:#e0600b; --anc-soft:#fde6d2; --desc:#8b3db3; --desc-soft:#f3e8f9;
-  --ok:#2f7d4f; --ok-soft:#e2f2e7; --warn:#946000; --warn-soft:#fbf0d9; --bad:#b8382c; --bad-soft:#fbe4e1;
-  --link:#8c99a6;
-  --board:#d8e0e9; --card:#ffffff; --card-line:#a9b6c4; --card-shadow:0 1px 2px rgba(16,32,52,.14);
+  /* tema claro e sóbrio (padrão): fundos quase brancos, tons dessaturados */
+  --bg:#f7f7f5; --surface:#ffffff; --surface-2:#f4f4f1; --ink:#2a2f35; --muted:#6c727a; --line:#e2e3df;
+  --accent:#4a6283; --accent-ink:#ffffff; --accent-soft:#eaeef4;
+  --teo:#8197b5; --prat:#c9aa6e; --ext:#7fa891;
+  --anc:#c0703f; --anc-soft:#f8ede5; --desc:#8a71a5; --desc-soft:#f2eef6;
+  --ok:#5b8a69; --ok-soft:#edf4ef; --warn:#a6802f; --warn-soft:#f8f2e3; --bad:#ad5246; --bad-soft:#f8eae7;
+  --link:#b3b8bd;
+  --board:#f0f1ee; --card:#ffffff; --card-line:#dcdedb; --card-shadow:0 1px 1px rgba(30,35,40,.05);
   --f-body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
   --f-cond:"IBM Plex Sans Condensed", "Arial Narrow", "IBM Plex Sans", sans-serif;
   --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -221,6 +222,7 @@ tfoot td{font-weight:600; background:var(--surface-2)}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important} }
 </style>
 <style>:root{color-scheme:light} body{margin:0} img{max-width:100%}</style>
+<script>try { document.documentElement.dataset.theme = localStorage.getItem('simulador-ppc-dcj-sr-v1-tema') === 'escuro' ? 'dark' : 'light'; } catch(e){ document.documentElement.dataset.theme = 'light'; }</script>
 </head>
 <body>
 
@@ -248,6 +250,7 @@ tfoot td{font-weight:600; background:var(--surface-2)}
       <button id="btnSalvar" type="button">Salvar ponto de controle</button>
       <button id="btnPontos" type="button">Pontos de controle</button>
       <span id="estadoSalvo" class="estado"></span>
+      <button id="btnTema" type="button" class="ghost" style="margin-left:auto" title="Alternar entre o visual claro e o escuro"></button>
     </div>
     <div id="confirmBar" class="confirm" hidden></div>
   </header>
@@ -1147,6 +1150,9 @@ function ligarTopo(){
   $('btnExp').onclick = exportar;
   $('btnSalvar').onclick = salvarPonto;
   $('btnPontos').onclick = abrirPontos;
+  const tema = () => { const esc = document.documentElement.dataset.theme === 'dark'; $('btnTema').textContent = esc ? 'Visual claro' : 'Visual escuro'; };
+  $('btnTema').onclick = () => { const esc = document.documentElement.dataset.theme !== 'dark'; document.documentElement.dataset.theme = esc ? 'dark' : 'light'; try { localStorage.setItem(KEY + '-tema', esc ? 'escuro' : 'claro'); } catch(e){} tema(); requestAnimationFrame(desenharLigacoes); };
+  tema();
   window.addEventListener('beforeunload', e => { if (UI.sujo){ e.preventDefault(); e.returnValue = ''; } });
   $('btnImp').onclick = importar;
   document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { UI.tab = b.dataset.tab; try { localStorage.setItem(KEY + '-tab', UI.tab); } catch(e){} render(); });

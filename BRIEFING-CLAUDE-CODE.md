@@ -126,7 +126,7 @@ A distinção entre norma e diretriz interna é deliberada e deve ser mantida.
 
 Importação aceita o formato próprio (`{app: "simulador-ppc-dcj-santa-rita", versao: 1, propostas: [...]}`) e o JSON do simulador original (`{proposals: [{nome, componentes: [{nome, natureza, periodo, ch}]}]}`), que é convertido; nesse caso os pré-requisitos ficam vazios. Importar acrescenta propostas, nunca substitui as existentes.
 
-A página segue tema claro e escuro, funciona em tela de celular sem rolagem horizontal da página (o quadro da grade tem rolagem própria) e está toda em português.
+A página abre sempre no visual claro e sóbrio (fundos quase brancos, cores dessaturadas), mesmo com o sistema em modo escuro. O visual escuro, de cores mais vivas, fica como alternativa no botão "Visual escuro" do cabeçalho; a escolha fica em `simulador-ppc-dcj-sr-v1-tema`. A página funciona em tela de celular sem rolagem horizontal da página (o quadro da grade tem rolagem própria) e está toda em português.
 
 ## 9. Valores de referência para conferência
 
