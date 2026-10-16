@@ -23,10 +23,10 @@ O GitHub Pages publica a branch `claude/nice-babbage-pqpsnj`. O `.gitignore` exc
 
 ## 3. Propostas de partida
 
-- **Grade de trabalho (16/10)** (id `atual`): a proposta atual e padrão, com os ajustes da reunião de 16.10.2026. História do Direito no 1º período e Economia Política no 2º. Direito Empresarial I no 8º, para o 5º não passar de 300 h em sala. UCE-OB I, II e III no 3º, 4º e 5º, em sequência. Criminologia obrigatória no 10º, com pré-requisito em Direito Penal III. Leis Penais Especiais optativa. Serviços de Assessoria I e II com 60 h de prática. Pesquisa Aplicada ao Direito com 30 h, como exceção em discussão. Carga total de 3.750 h, marcada em discussão (`cfg.cargaEmDiscussao`). Matrícula de 240 h a 420 h, valores arredondados e não definitivos (`cfg.matMin`, `cfg.matMax`).
+- **Grade de trabalho (16/10)** (id `atual`): a proposta atual e padrão, com os ajustes da reunião de 16.10.2026. História do Direito no 1º período e Economia Política no 2º. Direito Empresarial I no 5º, por decisão do coordenador. UCE-OB I, II e III no 3º, 4º e 5º, em sequência. Com isso o 5º período tem 360 h em sala, e a conformidade acusa o estouro; o remanejamento ainda não foi decidido. Criminologia obrigatória no 10º e Leis Penais Especiais optativa, as duas só com Direito Penal III como pré-requisito (o coordenador prefere um pré-requisito por disciplina). Serviços de Assessoria I e II com 60 h de prática. Pesquisa Aplicada ao Direito com 30 h, como exceção em discussão. Carga total de 3.750 h, marcada em discussão (`cfg.cargaEmDiscussao`). Matrícula de 240 h a 420 h, valores arredondados e não definitivos (`cfg.matMin`, `cfg.matMax`).
 - **Versão de 18/09 (memória)** (id `anterior`): o estudo preliminar discutido em 18.09.2026, fiel ao documento, mantido para comparação.
 
-Variantes intermediárias (grade de 16/10 antes dos ajustes, variante de duas UCE, versão de 19/09) saíram. `incluirModelos` as retira uma única vez de quem as tinha salvas (marcador `retirados-2` em `S.modelos`), acrescenta as propostas novas e abre a atual.
+Variantes intermediárias (grade de 16/10 antes dos ajustes, variante de duas UCE, versão de 19/09) saíram. `incluirModelos` as retira uma única vez de quem as tinha salvas (marcador `retirados-2` em `S.modelos`), devolve Direito Empresarial I ao 5º em quem salvou a grade com ele no 8º (marcador `ajuste-1`), acrescenta as propostas novas e abre a atual.
 
 ## 4. Modelo de dados
 
@@ -79,7 +79,7 @@ Cabeçalho com proposta, duplicar, renomear, excluir, exportar, importar e resta
 - **Conformidade**: parâmetros, com a extensão aproveitável no bloco flexível.
 - **Totais**: totalização no formato do histórico, creditação de extensão com a tabela "Como se monta a oferta de extensão", obrigatórios por eixo, carga por período, art. 13 e comparação entre propostas.
 - **Gráficos**: composição da carga com a extensão sobreposta, caminhos da extensão, carga por período, componentes com extensão e comparação.
-- **Equivalências**: dado estático (`EQUIV`), estudo de 16.10.2026. Regra: só há equivalência quando o conteúdo é equivalente e a carga de 2019 é maior ou igual à nova. Com carga menor, aparece "sem equivalência pela carga (faltam X h)". A coluna de código de 2019 fica em branco para preenchimento.
+- **Equivalências**: dado estático (`EQUIV`, com `linhas` e `grupos` A a E), estudo de 16.10.2026 revisado. Regra (RGG, art. 35): só há equivalência, componente a componente, quando o conteúdo é equivalente e a carga de 2019 é maior ou igual à nova. Com carga menor, aparece "Sem equivalência (faltam X h)". Optativas de 2019 não têm equivalência em bloco: ela será feita componente a componente quando houver o rol de optativas novo. `emDiscussao` gera a etiqueta "a decidir". A coluna de código de 2019 fica em branco para preenchimento. Seis regras do estudo aparecem abaixo da tabela.
 
 A exportação gera o `.json` das propostas e a planilha `.csv` da estrutura (período, categoria no histórico, natureza, carga decomposta, créditos, pré-requisitos, situação).
 
@@ -90,14 +90,14 @@ Qualquer alteração no núcleo de cálculo deve reproduzir:
 | Indicador | Grade de trabalho (16/10) | Versão de 18/09 |
 |---|---:|---:|
 | Obrigatórios + optativas + flexíveis | 3.270 + 240 + 240 = 3.750 h | 3.150 + 240 + 408 = 3.798 h |
-| Horas em sala por período | 300 do 1º ao 7º; 240 do 8º ao 10º | 300 em todos |
+| Horas em sala por período | 300 no 1º ao 4º, 6º e 7º; 360 no 5º (acima do teto); 180 no 8º; 240 no 9º e 10º | 300 em todos |
 | Extensão fixa / piso / teto | 180 / 375 / 562 h | 468 / 380 / 569 h |
 | Parte livre e caminhos | 195 h; optativas até 240 h e flexíveis até 195 h, os dois fecham | 0 |
 | Básicos profissionais | 2.100 h, 56,0% | 2.040 h, 53,7% |
 | AC e prática jurídica | 600 h, 16,0% | 738 h, 19,4% |
 | Cadeia / simulação / elos sensíveis | 10 / 10 / 3 | 10 / 11 / 5 |
 | Matrícula | 240 a 420 h adotados; pela regra, 234 a 351 h | 226 a 339 h, pela regra |
-| Equivalências | 47 equivalentes e 7 sem equivalência pela carga | — |
+| Equivalências | 46 equivalentes e 7 sem equivalência pela carga, em 76 linhas | — |
 
 ## 9. Pendências e limitações
 
