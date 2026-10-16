@@ -160,7 +160,6 @@ path.lk.bad{stroke:var(--bad); stroke-dasharray:4 3; stroke-width:1.8; opacity:1
 
 /* painel */
 .painel{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:14px; display:flex; flex-direction:column; gap:12px; min-width:0}
-.painel .hint{font-size:.86rem; color:var(--muted); max-width:62ch}
 .form{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:8px 10px}
 .form label.f{min-width:0}
 .form input[type=text],.form input[type=number],.form select,.form textarea{width:100%}
@@ -550,10 +549,10 @@ function calc(P){
     if (civ && pen && +civ.p !== +pen.p) penalCivil.push([civ.id, pen.id]);
   });
 
-  return {total, obrCH, acCH, optExig, extMin, extMax, extObr, extApr, ofertaUCE, extFlex, optExtLivre, piso, tetoExt,
+  return {total, obrCH, acCH, optExig, extMin, extMax, extApr, ofertaUCE, extFlex, optExtLivre, piso, tetoExt,
     livre: Math.max(0, piso - extMin), caminhoOpt: optExtLivre >= piso - extMin, caminhoFlex: extFlex >= piso - extMin,
-    bas, a13, a13Itens, per, maiorPer, matBase, matMax, matMin, matMaxRegra, matMinRegra, perMax, edges, foraDoNucleo, A, h, critico, cadeiaDisc, caminhoDisc, sensiveis, simPer, durMin,
-    art33, semNivel, optPer, obrSemPer, extEmAtividade, duplaContagem, nao60, salaAcima, penalCivil, O, M,
+    bas, a13, a13Itens, per, maiorPer, matBase, matMax, matMin, matMaxRegra, matMinRegra, perMax, foraDoNucleo, A, critico, cadeiaDisc, caminhoDisc, sensiveis, simPer, durMin,
+    art33, semNivel, optPer, obrSemPer, extEmAtividade, duplaContagem, nao60, salaAcima, penalCivil, M,
     pExtMin: pct(extMin, total), pBas: pct(bas, total), pA13: pct(a13, total)};
 }
 
@@ -672,10 +671,6 @@ function incluirModelos(o){
   normalizarProps(o.props);
   o.modelos = o.modelos || [];
   if (!o.modelos.includes('retirados-2')){ o.props = o.props.filter(p => !['v1610-2uce', 'base', 'v1610'].includes(p.id)); o.modelos.push('retirados-2'); }
-  if (!o.modelos.includes('ajuste-1')){
-    const e = (o.props.find(p => p.id === 'atual') || {comps:[]}).comps.find(c => c.id === 'direito-empresarial-i');
-    o.modelos.push('ajuste-1');
-  }
   if (!o.modelos.includes('ajuste-2')){
     /* decisão de 16/10, 22h: Direito Empresarial I no 8º, em discussão */
     const e = (o.props.find(p => p.id === 'atual') || {comps:[]}).comps.find(c => c.id === 'direito-empresarial-i');
@@ -694,7 +689,6 @@ function incluirModelos(o){
    KEY guarda a situação aberta na próxima visita; KEY-pontos guarda a lista de pontos de controle. */
 let PONTOS = [];
 try { const r = JSON.parse(localStorage.getItem(KEY + '-pontos') || '[]'); if (Array.isArray(r)) PONTOS = r; } catch(e){}
-function marcarSujo(){ UI.sujo = true; renderEstado(); }
 function gravar(){
   try {
     localStorage.setItem(KEY, JSON.stringify(S));
