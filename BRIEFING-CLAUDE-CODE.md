@@ -8,7 +8,7 @@ O curso de Bacharelado em Direito de Santa Rita (Departamento de Ciências Jurí
 
 Existe um simulador anterior, feito por um professor do NDE: <https://hugobelmorais-oss.github.io/simulador-ppc-dcj/> (repositório `hugobelmorais-oss/simulador-ppc-dcj`). Ele soma cargas horárias por período e por natureza e verifica apenas a faixa de extensão. Este aplicativo foi criado para cobrir o que aquele não cobre: pré-requisitos, duração mínima, decomposição da carga horária e as demais exigências normativas.
 
-O aplicativo traz quatro propostas de partida, nesta ordem: **Grade atualizada (16/10)** (id `v1610`), a versão padrão, que abre selecionada e aparece como "(padrão)"; **Variante: duas UCE obrigatórias (16/10)** (id `v1610-2uce`), em que sai a UCE-OB III e as optativas passam a 300 h; **Versão de 19/09** (id `base`); e **Versão de 18/09 (estudo preliminar)** (id `anterior`), fiel ao documento discutido pelo NDE em 18.09.2026. As duas últimas ficam para comparação na aba Totais. Quem já usava o simulador recebe as propostas novas uma vez, sem perder edições, e a nova padrão passa a abrir primeiro. Nenhuma proposta foi deliberada pelo NDE ou pelo Colegiado. Isso precisa continuar claro em qualquer texto do aplicativo ou do repositório.
+O aplicativo traz duas propostas de partida. A **Grade de trabalho (16/10)** (id `v1610`) é a única versão de trabalho: o estado inicial de 16.10.2026, com 180 h de extensão fixa, sobre o qual se montam todos os outros estados (por exemplo, a variante com duas UCE obrigatórias: arrastar a UCE-OB III para o banco e elevar as optativas a 300 h). A **Versão de 18/09 (memória)** (id `anterior`) fica como registro do estudo preliminar e referência de comparação. A variante de 16/10 e a versão de 19/09 saíram dos dados; quem as tinha na área de trabalho perde essas duas uma única vez (marcador `retirados-1` em `S.modelos`), sem perder edições na grade de trabalho. Estados intermediários se guardam em Pontos de controle. Nenhuma proposta foi deliberada pelo NDE ou pelo Colegiado. Isso precisa continuar claro em qualquer texto do aplicativo ou do repositório.
 
 ## 2. Finalidade
 
@@ -125,6 +125,8 @@ A distinção entre norma e diretriz interna é deliberada e deve ser mantida.
 - **Faixa de indicadores**: carga total, extensão, básicos, art. 13, duração mínima e créditos, com cor de situação.
 - **Grade e pré-requisitos**: faixa horizontal "Como usar" no alto da aba, com uma nota discreta sobre a pendência do cálculo da extensão nas optativas, que pode ser recolhida (o estado fica em `simulador-ppc-dcj-sr-v1-ajuda`). Colunas do 1º ao 10º período, mais "obrigatórios sem período" (que deve ficar vazia), "aproveitamento" e "banco de optativas", sobre fundo mais escuro que os cartões dos componentes. Clicar num componente destaca em laranja seus pré-requisitos e em roxo o que depende dele; o vermelho fica reservado a erros. Chaves: mostrar todas as ligações; destacar a cadeia mais longa; modo ligação (clicar no pré-requisito e depois no componente que o exige; repetir o par desfaz). Ligações que violam o art. 33, § 1º, aparecem em vermelho tracejado. As optativas ficam fora da grade, no banco, agrupadas pelo período a que pertencem, em ordem crescente do período 0 ao 10º, e com o período num rótulo em cada cartão. As colunas de períodos mostram só obrigatórios. No painel, o período da optativa aparece como informação, com o pré-requisito que o determina. O painel lateral de edição só aparece com um componente selecionado; sem seleção, a grade ocupa a largura toda.
 - **Arrastar componentes**: obrigatórios e optativos podem ser arrastados para um período (vira obrigatório naquele período), para "obrigatórios sem período" ou para o banco de optativas (vira optativo). No celular, toca-se e segura antes de arrastar. O arrasto que colocaria o componente no mesmo período ou antes de um pré-requisito, ou no mesmo período ou depois de um componente que dele depende, é recusado com aviso (RGG, art. 33, § 1º). Atividades complementares e extensão por aproveitamento não se arrastam.
+- **Gráficos** (aba própria, `renderGraficos`): composição da carga total por categoria com o mínimo; extensão em quatro faixas (parte fixa, fixa + optativas, fixa + flexível, máximo) com piso e teto; percentuais de básicos, AC e prática jurídica e extensão fixa contra os limites; carga por período com o teto em sala; teórica, prática e extensão na parte fixa; comparação entre as propostas da área de trabalho. Barras em HTML, sem biblioteca, com dica ao passar o mouse. Cores das séries em `--s1` a `--s4`, validadas para daltonismo nos dois temas.
+- **O que mudou**: a cada alteração, `indicadores(R)` compara antes e depois (carga total, categorias, extensão fixa, piso, parte livre, caminhos, percentuais, duração, maior período em sala) e a faixa de avisos lista as diferenças, junto com os problemas novos.
 - **Avisos**: a cada alteração, a função `problemas(R)` compara a situação anterior com a nova e mostra, numa faixa abaixo das abas, apenas os problemas novos: pré-requisito no mesmo período ou depois, ciclo, cadeia abaixo da duração mínima, período acima do teto em sala (diretriz do NDE), dependência de componente sem período ou não obrigatório, obrigatório sem período. Avisos resolvidos somem na alteração seguinte. Trocar, duplicar, excluir, restaurar ou importar proposta não gera aviso. Os avisos não substituem a aba Conformidade.
 - **Tabela de componentes**: edição em linha, com colunas de CH teórica, CH prática, caixa "Ext.", CH de extensão, total, créditos, básico e art. 13.
 - **Conformidade**: parâmetros da proposta e lista de verificações.
@@ -138,22 +140,24 @@ A página abre sempre no visual claro e sóbrio (fundos quase brancos, cores des
 
 Qualquer alteração no núcleo de cálculo deve reproduzir estes resultados com os dados de partida:
 
-| Indicador | Grade 16/10 | Variante 2 UCE | Versão 19/09 | Versão 18/09 |
-|---|---:|---:|---:|---:|
-| Obrigatórios + optativas + flexíveis/AC + aproveitamento | 3.240 + 240 + 240 + 0 | 3.180 + 300 + 240 + 0 | 3.240 + 240 + 120 + 120 | 3.150 + 240 + 120 + 288 |
-| Carga total | 3.720 h | 3.720 h | 3.720 h | 3.798 h |
-| Extensão fixa | 180 h | 120 h | 420 h | 468 h |
-| Piso / teto de extensão | 372 / 558 h | 372 / 558 h | 372 / 558 h | 380 / 569 h |
-| Parte livre | 192 h | 252 h | 0 | 0 |
-| Fecha só por optativas / só pelo flexível (X = 195) | sim / sim | não / não | dispensa | dispensa |
-| Com X = 120 | sim / não (faltam 72 h) | não / não | — | — |
-| Básicos profissionais | 56,5% | 56,5% | 56,5% | 53,7% |
-| AC e prática jurídica | 15,3% | 15,3% | 15,3% | 19,4% |
-| Cadeia mais longa / simulação | 10 / 10 | 10 / 10 | 10 / 10 | 10 / 10 |
-| Elos sensíveis | 3 | 3 | 3 | 5 |
-| Matrícula mínima / máxima | 240 / 420 h | 240 / 420 h | 240 / 420 h | 255 / 405 h |
+| Indicador | Grade de trabalho (16/10) | Versão 18/09 (memória) |
+|---|---:|---:|
+| Obrigatórios + optativas + flexíveis/AC + aproveitamento | 3.240 + 240 + 240 + 0 | 3.150 + 240 + 120 + 288 |
+| Carga total | 3.720 h | 3.798 h |
+| Extensão fixa | 180 h | 468 h |
+| Piso / teto de extensão | 372 / 558 h | 380 / 569 h |
+| Parte livre | 192 h | 0 |
+| Fecha só por optativas / só pelo flexível (X = 195) | sim / sim | dispensa |
+| Com X = 120 | sim / não (faltam 72 h) | — |
+| Básicos profissionais | 56,5% | 53,7% |
+| AC e prática jurídica | 15,3% | 19,4% |
+| Cadeia mais longa / simulação | 10 / 10 | 10 / 10 |
+| Elos sensíveis | 3 | 5 |
+| Matrícula mínima / máxima | 240 / 420 h | 255 / 405 h |
 
-A versão anterior segue o documento: Sociologia Jurídica e Direito Previdenciário com esses nomes; Serviço de Assessoria I no 6º período, com pré-requisito em Teoria Geral do Processo, e Serviço II no 7º; UCE-OB III dependente de Processual Civil I e Processual Penal I; Trabalho de Curso como atividade de orientação coletiva, sem período, no bloco de creditação; nenhuma optativa cadastrada, porque o documento não as lista. Os pré-requisitos de UCE-OB I e II e os demais que o documento não detalha vêm da versão original dos dados.
+Estado montado sobre a grade de trabalho, para conferência: com a UCE-OB III arrastada para o banco, a carga cai a 3.660 h, a parte fixa a 120 h e nenhum caminho fecha sozinho o piso (aviso). Elevando as optativas a 300 h, a carga volta a 3.720 h, a parte livre fica em 252 h e o caminho das optativas fecha, porque a UCE-OB III passa a integrar a oferta de optativas com extensão.
+
+A versão de 18/09 segue o documento: Sociologia Jurídica e Direito Previdenciário com esses nomes; Serviço de Assessoria I no 6º período, com pré-requisito em Teoria Geral do Processo, e Serviço II no 7º; UCE-OB III dependente de Processual Civil I e Processual Penal I; Trabalho de Curso como atividade de orientação coletiva, sem período, no bloco de creditação; nenhuma optativa cadastrada, porque o documento não as lista. Os pré-requisitos de UCE-OB I e II e os demais que o documento não detalha vêm da versão original dos dados.
 
 Na proposta de trabalho, as duas cadeias de dez períodos são: Introdução à Teoria do Direito I e II, Direito Civil I e II, Teoria Geral do Processo, Mediação e Arbitragem, Laboratórios I a IV; e Introdução I e II, Direito Civil I a VI, Direito da Criança e do Adolescente, Direito da Seguridade Social. Os três elos sensíveis são os pré-requisitos que ligam Introdução I a Civil II, comuns às duas cadeias.
 

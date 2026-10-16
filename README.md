@@ -33,13 +33,12 @@ Os dados carregados são propostas de trabalho. Nenhuma delas representa deliber
 
 ## Propostas incluídas
 
-- **Grade atualizada (16/10) (padrão)**: base de 19.09.2026 com as decisões de 15 e 16.10.2026. A extensão integra a carga total (piso de 10%, teto de 15% no histórico); acaba o mínimo de UCE optativas; atividades complementares e extensão em programas e projetos formam um bloco flexível de 240 h, do qual até X h contam como extensão; Medicina Legal passa a optativa e entra Criminologia, Política Criminal e Leis Penais Especiais no 10º período; entram Libras e duas UCE optativas a criar.
-- **Variante: duas UCE obrigatórias (16/10)**: sai a UCE-OB III e as optativas sobem para 300 h.
-- **Versão de 19/09** e **Versão de 18/09 (estudo preliminar)**: mantidas para comparação. Passam pelas mesmas verificações.
+- **Grade de trabalho (16/10) (padrão)**: a única versão de trabalho. É o estado inicial de 16.10.2026, com 180 h de extensão fixa nas UCE obrigatórias, piso de 10% e teto de 15% de extensão, bloco flexível de 240 h (até X h como extensão), Medicina Legal como optativa, Criminologia, Política Criminal e Leis Penais Especiais no 10º período, Libras e duas UCE optativas a criar. Todos os outros estados se montam sobre ela, e o simulador mostra em texto e em gráficos o que cada alteração muda.
+- **Versão de 18/09 (memória)**: o estudo preliminar discutido pelo NDE em 18 de setembro de 2026, mantido como registro e para comparação.
 
 Componentes com a etiqueta **a decidir** dependem do NDE ou do Colegiado; a etiqueta se marca ou desmarca no painel do componente.
 
-As alterações são recalculadas na hora. Para testar alternativas sem perder a base, use **Duplicar** e altere a cópia; a aba Totais compara as propostas lado a lado. **Restaurar originais** volta às quatro propostas de partida.
+As alterações são recalculadas na hora. Para testar alternativas sem perder a base, use **Duplicar** e altere a cópia; as abas Totais e Gráficos comparam as propostas lado a lado. **Restaurar originais** volta às duas propostas de partida.
 
 ## Como usar
 
