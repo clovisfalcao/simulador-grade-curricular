@@ -19,7 +19,7 @@
   --ok:#5b8a69; --ok-soft:#edf4ef; --warn:#a6802f; --warn-soft:#f8f2e3; --bad:#ad5246; --bad-soft:#f8eae7;
   --link:#b3b8bd;
   --board:#f0f1ee; --card:#ffffff; --card-line:#dcdedb; --card-shadow:0 1px 1px rgba(30,35,40,.05);
-  --s1:#3f6aa8; --s2:#c47a2c; --s3:#3f9a73; --s4:#8a5fb8;
+  --s1:#3f6aa8; --s2:#c47a2c; --s3:#3f9a73; --s4:#8a5fb8; --s5:#8d949b;
   --f-body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
   --f-cond:"IBM Plex Sans Condensed", "Arial Narrow", "IBM Plex Sans", sans-serif;
   --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -31,14 +31,14 @@
   --teo:#8ea9e2; --prat:#e2b254; --ext:#5fc4a3;
   --anc:#ff9a4d; --anc-soft:#3d2614; --desc:#c88ce8; --desc-soft:#2b1f3b;
   --ok:#6cc38e; --ok-soft:#163023; --warn:#e3b24f; --warn-soft:#33280f; --bad:#f0857a; --bad-soft:#3a1d1a;
-  --link:#5c6a78; --board:#0b0f14; --card:#2a3748; --card-line:#46566b; --card-shadow:0 1px 2px rgba(0,0,0,.5); --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#9085e9; color-scheme:dark; } }
+  --link:#5c6a78; --board:#0b0f14; --card:#2a3748; --card-line:#46566b; --card-shadow:0 1px 2px rgba(0,0,0,.5); --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#9085e9; --s5:#7d8792; color-scheme:dark; } }
 :root[data-theme="dark"]{
   --bg:#11161c; --surface:#18202a; --surface-2:#1e2733; --ink:#e6ecf2; --muted:#9aa8b6; --line:#2e3a47;
   --accent:#86aee8; --accent-ink:#0d1520; --accent-soft:#1c2c43;
   --teo:#8ea9e2; --prat:#e2b254; --ext:#5fc4a3;
   --anc:#ff9a4d; --anc-soft:#3d2614; --desc:#c88ce8; --desc-soft:#2b1f3b;
   --ok:#6cc38e; --ok-soft:#163023; --warn:#e3b24f; --warn-soft:#33280f; --bad:#f0857a; --bad-soft:#3a1d1a;
-  --link:#5c6a78; --board:#0b0f14; --card:#2a3748; --card-line:#46566b; --card-shadow:0 1px 2px rgba(0,0,0,.5); --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#9085e9; color-scheme:dark; }
+  --link:#5c6a78; --board:#0b0f14; --card:#2a3748; --card-line:#46566b; --card-shadow:0 1px 2px rgba(0,0,0,.5); --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#9085e9; --s5:#7d8792; color-scheme:dark; }
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -245,6 +245,10 @@ tfoot td{font-weight:600; background:var(--surface-2)}
 .gcol i:last-child{border-radius:4px 4px 0 0}
 .gcols .teto{position:absolute; left:0; right:0; height:2px; background:var(--bad)}
 .gcolrot{display:grid; grid-template-columns:repeat(10, minmax(0,1fr)); gap:6px; font-size:.72rem; color:var(--muted); text-align:center; font-family:var(--f-mono)}
+.hext{background:repeating-linear-gradient(45deg, var(--s3) 0 2px, transparent 2px 5px)!important}
+.gabs{position:absolute; top:0; bottom:0; display:block}
+.gabs.ini{border-radius:4px 0 0 4px} .gabs.fim{border-radius:0 4px 4px 0}
+.card .extb{align-self:flex-start; font-size:.68rem; font-weight:600; padding:0 6px; border-radius:999px; color:var(--ok); background:var(--ok-soft)}
 .hach{background:repeating-linear-gradient(45deg, var(--s1) 0 2px, transparent 2px 5px)!important; opacity:.7}
 
 /* modal e aviso */
@@ -891,6 +895,7 @@ function cardHTML(c, cls){
   return '<button type="button" class="card' + (ativ ? ' ativ' : '') + (movel ? ' movel' : '') + ' ' + cls + '" data-id="' + esc(c.id) + '" title="' + esc(c.n) + '">' +
     '<span class="cn">' + esc(curto(c.n)) + '</span>' +
     (c.status === 'possibilidade' ? '<span class="adec" title="Depende de decisão do NDE ou do Colegiado">a decidir</span>' : '') +
+    (e > 0 ? '<span class="extb" title="Carga de extensão, contada à parte">extensão ' + e + ' h</span>' : (c.tipo === 'ac' && num(c.extTeto) > 0 ? '<span class="extb" title="Parte que pode contar como extensão">até ' + Math.min(ch, num(c.extTeto)) + ' h de extensão</span>' : '')) +
     (c.tipo === 'opt' ? optRotulo(c) : '') +
     '<span class="cm"><span class="badge ' + c.nat + '">' + NAT_CURTO[c.nat] + '</span><span><span class="num">' + ch + ' h</span> · ' + (ch / 15) + ' cr</span></span>' +
     '<span class="tpe">' + bar + '</span></button>';
@@ -909,12 +914,14 @@ function renderGrade(){
     return k.join(' ');
   };
   const ord = (a, b) => a.n.localeCompare(b.n, 'pt-BR');
+  const extP = {}; C.filter(c => c.tipo === 'obr' && +c.p > 0).forEach(c => extP[c.p] = (extP[c.p] || 0) + num(c.ext));
   let h = '<svg id="lk" aria-hidden="true"></svg>';
   for (let p = 1; p <= 10; p++){
     const x = R.per[p - 1], teto = num(cfg.tetoSala) || 300;
     const w = Math.min(100, x.sala / teto * 100);
     h += '<div class="col" data-drop="' + p + '"><div class="colhead"><span class="t">' + p + 'º período</span>' +
       '<span class="m">' + x.sala + ' h em sala' + (x.orient ? ' + ' + x.orient + ' h orient.' : '') + '</span>' +
+      (extP[p] ? '<span class="m" style="color:var(--ok)">inclui ' + extP[p] + ' h de extensão</span>' : '') +
       '<span class="meter" title="Horas em sala em relação ao teto de ' + teto + ' h"><b class="' + (x.sala > teto ? 'over' : '') + '" style="width:' + w + '%"></b></span>' +
       '</div>' +
       C.filter(c => c.tipo === 'obr' && +c.p === p).sort((a, b) => emSala(b) - emSala(a) || ord(a, b)).map(c => cardHTML(c, clsDe(c))).join('') + '</div>';
@@ -1116,38 +1123,58 @@ function renderConf(){
 }
 
 /* ---------- totais ---------- */
+/* Categorias primárias, como no histórico escolar da UFPB. A extensão não é categoria primária: sobrepõe-se a estas e conta à parte. */
+function catHist(R, comps){
+  const apr = R.aprCH;
+  return [
+    {k:'bas', nome:'Básicos profissionais', ch:R.bas, cor:'var(--s1)'},
+    {k:'cobr', nome:'Complementares obrigatórios', ch:R.obrCH - R.bas, cor:'var(--s4)'},
+    {k:'opt', nome:'Optativos', ch:R.optExig, cor:'var(--s2)'},
+    {k:'flex', nome:R.cat[2].nome === 'Atividades complementares' ? 'Flexíveis (atividades complementares)' : 'Flexíveis', ch:R.acCH, cor:'var(--s5)'}
+  ].concat(apr ? [{k:'apr', nome:'Extensão por aproveitamento', ch:apr, cor:'var(--muted)'}] : []);
+}
+/* Extensão de cada categoria primária: fixa (obrigatórios, aproveitamento, mínimo de optativas) e livre (escolha do estudante). */
+function extPorCat(R, comps){
+  const obr = comps.filter(c => c.tipo === 'obr');
+  return {bas: obr.filter(c => c.bas).reduce((a, c) => a + num(c.ext), 0), cobr: obr.filter(c => !c.bas).reduce((a, c) => a + num(c.ext), 0), opt: R.bloco, flex: 0, apr: R.extApr};
+}
 function renderTotais(){
   const cfg = P().cfg, c = R.cat, d = v => v == null ? '<span class="muted">—</span>' : fmt(v);
-  const tCat = '<div class="box"><h2>Totalização por categoria</h2><div class="tbl-wrap"><table><thead><tr><th>Categoria</th><th class="r">CH</th><th class="r t-teo">CH teór.</th><th class="r t-prat">CH prát.</th><th class="r t-ext">CH ext.</th><th class="r">Créd.</th></tr></thead><tbody>' +
-    c.filter(x => x.k !== 'apr' || x.ch > 0).map(x => '<tr><td>' + x.nome + '</td><td class="r num">' + fmt(x.ch) + '</td><td class="r num">' + d(x.teo) + '</td><td class="r num">' + d(x.prat) + '</td><td class="r num">' + d(x.ext) + '</td><td class="r num">' + fmt(x.ch / 15) + '</td></tr>').join('') +
-    '</tbody><tfoot><tr><td>Total</td><td class="r num">' + fmt(R.total) + '</td><td class="r num">' + fmt(c.reduce((a, x) => a + (x.teo || 0), 0)) + '</td><td class="r num">' + fmt(c.reduce((a, x) => a + (x.prat || 0), 0)) + '</td><td class="r num">' + fmt(R.extMin) + '</td><td class="r num">' + fmt(R.total / 15) + '</td></tr></tfoot></table></div>' +
-    '<p class="foot">Categoria e composição da carga são classificações independentes: as horas de extensão contam uma só vez, dentro da categoria do componente. Nas colunas de composição, o total soma só a parte fixa; a das optativas e a do bloco flexível depende da escolha do estudante. Um crédito equivale a 15 h.</p></div>';
+  const H = catHist(R, P().comps);
+  const tCat = '<div class="box"><h2>Totalização no formato do histórico</h2><div class="tbl-wrap"><table><thead>' +
+    '<tr><th rowspan="2"></th><th class="r" rowspan="2">Básicos profissionais</th><th class="c" colspan="' + (H.length - 1) + '">Componentes curriculares complementares</th><th class="r" rowspan="2">Total</th></tr>' +
+    '<tr>' + H.slice(1).map(x => '<th class="r">' + esc(x.nome.replace('Complementares o', 'O')) + '</th>').join('') + '</tr></thead><tbody>' +
+    '<tr><td>Exigido (h)</td>' + H.map(x => '<td class="r num">' + fmt(x.ch) + '</td>').join('') + '<td class="r num"><b>' + fmt(R.total) + '</b></td></tr>' +
+    '<tr><td>Créditos</td>' + H.map(x => '<td class="r num">' + fmt(x.ch / 15) + '</td>').join('') + '<td class="r num">' + fmt(R.total / 15) + '</td></tr>' +
+    '</tbody></table></div>' +
+    '<p class="foot">Mesma organização da totalização do histórico escolar. A extensão não entra nestas categorias: ela se sobrepõe a elas e é contada à parte, no quadro Creditação de extensão. Um crédito equivale a 15 h.</p></div>';
 
   const obr = P().comps.filter(x => x.tipo === 'obr');
   const eixos = Object.keys(EIXO).filter(k => k !== 'ac').map(k => {
     const cs = obr.filter(x => x.eixo === k); const s = f => cs.reduce((a, x) => a + f(x), 0);
     return {k, n:cs.length, ch:s(chOf), teo:s(x => num(x.teo)), prat:s(x => num(x.prat)), ext:s(x => num(x.ext))};
   }).filter(x => x.n);
-  const tEixo = '<div class="box"><h2>Obrigatórios por eixo</h2><div class="tbl-wrap"><table><thead><tr><th>Eixo</th><th class="r">Comp.</th><th class="r">CH</th><th class="r t-teo">Teór.</th><th class="r t-prat">Prát.</th><th class="r t-ext">Ext.</th><th class="r">Créd.</th></tr></thead><tbody>' +
-    eixos.map(x => '<tr><td>' + EIXO[x.k] + '</td><td class="r num">' + x.n + '</td><td class="r num">' + fmt(x.ch) + '</td><td class="r num">' + fmt(x.teo) + '</td><td class="r num">' + fmt(x.prat) + '</td><td class="r num">' + fmt(x.ext) + '</td><td class="r num">' + fmt(x.ch / 15) + '</td></tr>').join('') +
-    '</tbody><tfoot><tr><td>Total</td><td class="r num">' + obr.length + '</td><td class="r num">' + fmt(R.obrCH) + '</td><td class="r num">' + fmt(c[0].teo) + '</td><td class="r num">' + fmt(c[0].prat) + '</td><td class="r num">' + fmt(c[0].ext) + '</td><td class="r num">' + fmt(R.obrCH / 15) + '</td></tr></tfoot></table></div></div>';
+  const tEixo = '<div class="box"><h2>Obrigatórios por eixo</h2><div class="tbl-wrap"><table><thead><tr><th>Eixo</th><th class="r">Comp.</th><th class="r">CH</th><th class="r">Créd.</th></tr></thead><tbody>' +
+    eixos.map(x => '<tr><td>' + EIXO[x.k] + '</td><td class="r num">' + x.n + '</td><td class="r num">' + fmt(x.ch) + '</td><td class="r num">' + fmt(x.ch / 15) + '</td></tr>').join('') +
+    '</tbody><tfoot><tr><td>Total</td><td class="r num">' + obr.length + '</td><td class="r num">' + fmt(R.obrCH) + '</td><td class="r num">' + fmt(R.obrCH / 15) + '</td></tr></tfoot></table></div>' +
+    '<p class="foot">O eixo é uma classificação pedagógica. As UCE obrigatórias estão no eixo Extensão, mas sua carga também conta na categoria Complementares obrigatórios.</p></div>';
 
   const teto = num(cfg.tetoSala) || 300, escala = Math.max(teto + 120, R.maiorPer, R.matMax);
   const tPer = '<div class="box"><h2>Carga por período</h2><div class="bars">' + R.per.map(x =>
     '<div class="bar"><span>' + x.p + 'º</span><span class="track" title="' + x.sala + ' h em sala e ' + x.orient + ' h de orientação"><i class="s" style="width:' + (x.sala / escala * 100) + '%"></i><i class="o" style="width:' + (x.orient / escala * 100) + '%"></i><span class="teto" style="left:' + (teto / escala * 100) + '%"></span></span><span class="num">' + x.sala + (x.orient ? ' + ' + x.orient : '') + ' h</span></div>').join('') +
     '</div><p class="foot">Faixa cheia: horas em sala. Faixa hachurada: atividades de orientação, que não ocupam dia. Traço vermelho: teto de ' + teto + ' h em sala. Matrícula semestral de ' + fmt(R.matMin) + ' h a ' + fmt(R.matMax) + ' h.</p></div>';
 
-  const extFixos = P().comps.filter(x => num(x.ext) > 0 && (x.tipo === 'obr' || x.tipo === 'apr'));
-  const extOpt = P().comps.filter(x => num(x.ext) > 0 && x.tipo === 'opt');
-  const flexs = P().comps.filter(x => x.tipo === 'ac' && num(x.extTeto) > 0);
-  const tExt = '<div class="box"><h2>Composição da extensão</h2><div class="tbl-wrap"><table><thead><tr><th>Componente</th><th>Situação</th><th class="r">CH ext.</th></tr></thead><tbody>' +
-    extFixos.map(x => '<tr><td>' + esc(x.n) + '</td><td>' + (x.tipo === 'obr' ? 'Obrigatório' + (+x.p > 0 ? ', ' + x.p + 'º período' : '') : 'Aproveitamento') + '</td><td class="r num">' + num(x.ext) + '</td></tr>').join('') +
-    '<tr class="grp"><td colspan="2">Parte fixa' + (R.bloco ? ' (inclui ' + fmt(R.bloco) + ' h de mínimo em UCE optativas)' : '') + '</td><td class="r num">' + fmt(R.extMin) + '</td></tr>' +
-    extOpt.map(x => '<tr><td>' + esc(x.n) + '</td><td>Optativa, à escolha do estudante</td><td class="r num">' + num(x.ext) + '</td></tr>').join('') +
-    flexs.map(x => '<tr><td>' + esc(x.n) + '</td><td>Bloco flexível, à escolha do estudante</td><td class="r num">até ' + fmt(Math.min(chOf(x), num(x.extTeto))) + '</td></tr>').join('') +
+  const catDe = x => x.tipo === 'obr' ? (x.bas ? 'Básico profissional' : 'Complementar obrigatório') + (+x.p > 0 ? ', ' + x.p + 'º período' : '') : x.tipo === 'opt' ? 'Optativo, à escolha' : x.tipo === 'ac' ? 'Flexível, à escolha' : 'Aproveitamento';
+  const comExt = P().comps.filter(x => num(x.ext) > 0 || (x.tipo === 'ac' && num(x.extTeto) > 0))
+    .sort((a, b) => ({obr:0, apr:1, opt:2, ac:3})[a.tipo] - ({obr:0, apr:1, opt:2, ac:3})[b.tipo] || (num(a.p) || 99) - (num(b.p) || 99) || a.n.localeCompare(b.n, 'pt-BR'));
+  const tExt = '<div class="box"><h2>Creditação de extensão</h2><p class="foot" style="margin-top:-4px">Contada à parte: as horas abaixo já estão dentro das categorias do histórico e não se somam a elas.</p><div class="tbl-wrap"><table><thead><tr><th class="r">Exigida (piso de 10%)</th><th class="r">Fixa na grade</th><th class="r">Pendente, à escolha do estudante</th><th class="r">Teto no histórico (15%)</th></tr></thead><tbody>' +
+    '<tr><td class="r num"><b>' + fmt(R.piso) + '</b></td><td class="r num">' + fmt(R.extMin) + '</td><td class="r num">' + fmt(R.livre) + '</td><td class="r num">' + fmt(R.tetoExt) + '</td></tr></tbody></table></div>' +
+    '<h3>Componentes que incorporam extensão</h3><div class="tbl-wrap"><table><thead><tr><th>Componente</th><th>Categoria no histórico</th><th class="r">CH do componente</th><th class="r t-ext">CH de extensão</th></tr></thead><tbody>' +
+    comExt.map(x => '<tr><td>' + esc(x.n) + '</td><td>' + catDe(x) + '</td><td class="r num">' + fmt(chOf(x)) + '</td><td class="r num">' + (x.tipo === 'ac' ? 'até ' + fmt(Math.min(chOf(x), num(x.extTeto))) : fmt(num(x.ext))) + '</td></tr>').join('') +
     '</tbody></table></div>' +
-    '<p class="foot">Piso por estudante: ' + fmt(R.piso) + ' h (10% de ' + fmt(R.total) + ' h); parte livre: ' + fmt(R.livre) + ' h. Teto no histórico: ' + fmt(R.tetoExt) + ' h (15%). Extensão pendente impede a conclusão.' +
-    (R.livre > 0 ? ' Só por optativas com extensão: até ' + fmt(R.optExtLivre) + ' h (' + (R.caminhoOpt ? 'fecha' : 'não fecha') + '). Só pelo bloco flexível: até ' + fmt(R.extFlex) + ' h (' + (R.caminhoFlex ? 'fecha' : 'não fecha') + ').' : '') + '</p></div>';
+    '<p class="foot">Fixa: ' + fmt(R.extMin) + ' h nos componentes obrigatórios' + (R.extApr ? ' e no aproveitamento' : '') + (R.bloco ? ' e no mínimo de UCE optativas' : '') + '. ' +
+    (R.livre ? 'Pendente: ' + fmt(R.livre) + ' h, a cumprir em optativas com extensão (até ' + fmt(R.optExtLivre) + ' h, ' + (R.caminhoOpt ? 'fecha' : 'não fecha') + ' sozinho) ou no bloco flexível (até ' + fmt(R.extFlex) + ' h, ' + (R.caminhoFlex ? 'fecha' : 'não fecha') + ' sozinho). ' : 'A parte fixa já alcança o piso. ') +
+    'Extensão pendente impede a conclusão; o que passar de ' + fmt(R.tetoExt) + ' h não é registrado como extensão.</p></div>';
 
   const tA13 = '<div class="box"><h2>Atividades complementares e prática jurídica</h2><div class="tbl-wrap"><table><thead><tr><th>Componente</th><th class="r">CH</th></tr></thead><tbody>' +
     R.a13Itens.map(x => '<tr><td>' + esc(x.n) + '</td><td class="r num">' + chOf(x) + '</td></tr>').join('') +
@@ -1165,7 +1192,7 @@ function renderTotais(){
   const tCmp = props.length < 2 ? '<div class="box" style="grid-column:1/-1"><h2>Comparação entre propostas</h2><p class="muted">Para comparar alternativas, use Duplicar no cabeçalho e altere a cópia. A comparação aparece aqui quando houver mais de uma proposta.</p></div>' : '<div class="box" style="grid-column:1/-1"><h2>Comparação entre propostas</h2><div class="tbl-wrap"><table><thead><tr><th>Indicador</th>' + props.map(x => '<th class="r">' + esc(x.p.nome) + '</th>').join('') + '</tr></thead><tbody>' +
     linhas.map(l => '<tr><td>' + l[0] + '</td>' + props.map(x => '<td class="r num">' + l[1](x) + '</td>').join('') + '</tr>').join('') + '</tbody></table></div></div>';
 
-  $('totais').innerHTML = tCat + tEixo + tPer + tExt + tA13 + tCmp;
+  $('totais').innerHTML = tCat + tExt + tEixo + tPer + tA13 + tCmp;
 }
 
 /* ---------- gráficos ---------- */
@@ -1182,29 +1209,50 @@ function gEixo(escala, marcas){
   const al = f => f < .08 ? 'translateX(0)' : f > .8 ? 'translateX(-100%)' : 'translateX(-50%)';
   return '<div class="grow"><span></span><div class="gaxis">' + marcas.map(m => '<span style="left:' + (m.v / escala * 100) + '%;transform:' + al(m.v / escala) + '">' + esc(m.t) + '</span>').join('') + '</div><span></span></div>';
 }
+/* faixa com segmentos em posição absoluta: usada para a extensão sobreposta às categorias */
+function gTrackAbs(segs, escala, marcas){
+  const px = v => (v / escala * 100) + '%';
+  return '<div class="gtrack"><span class="gbase"></span>' + segs.filter(sg => sg.v > 0).map(sg => '<i class="gabs ini fim ' + (sg.cls || '') + '" style="left:' + px(sg.x) + ';width:' + px(sg.v) + ';background:' + (sg.cor || 'transparent') + '" title="' + esc(sg.t) + '"></i>').join('') +
+    (marcas || []).map(m => '<span class="gmark' + (m.leve ? ' leve' : '') + '" style="left:calc(' + px(m.v) + ' - 1px)" title="' + esc(m.t) + '"></span>').join('') + '</div>';
+}
+/* posição da extensão sob cada categoria primária */
+function extSobreposta(R, comps, H){
+  const E = extPorCat(R, comps), out = []; let x = 0;
+  H.forEach(c => {
+    if (E[c.k]) out.push({x, v:E[c.k], cor:'var(--s3)', t:'Extensão fixa em ' + c.nome + ': ' + fmt(E[c.k]) + ' h'});
+    if (c.k === 'opt' && R.livre){
+      const ini = x + (E.opt || 0);
+      out.push({x:ini, v:R.livre, cls:'hext', t:'Extensão pendente, a cumprir em optativas ou flexíveis: ' + fmt(R.livre) + ' h'});
+    }
+    x += c.ch;
+  });
+  return out;
+}
 function gLeg(itens){ return '<div class="gleg">' + itens.map(([cor, t, cls]) => '<span><i style="background:' + cor + '" class="' + (cls || '') + '"></i>' + esc(t) + '</span>').join('') + '</div>'; }
 function stTxt(st){ return '<span class="gst ' + st + '">' + ({ok:'cumpre', warn:'atenção', bad:'não cumpre'})[st] + '</span>'; }
 
 function renderGraficos(){
   const st = t => (V.find(v => v.titulo === t) || {status:'ok'}).status;
-  /* 1. composição da carga total */
-  const cats = [['Obrigatórios', R.obrCH, 'var(--s1)'], ['Optativas', R.optExig, 'var(--s2)'], [R.cat[2].nome, R.acCH, 'var(--s3)'], ['Extensão por aproveitamento', R.aprCH, 'var(--s4)']].filter(c => c[1] > 0);
+  /* 1. composição da carga total, com a extensão sobreposta */
+  const H = catHist(R, P().comps);
   const escT = Math.max(R.total, num(P().cfg.cargaMin)) * 1.04;
-  const g1 = '<div class="box gbox"><h2>Composição da carga total</h2><p class="lead">' + fmt(R.total) + ' h, para um mínimo de ' + fmt(num(P().cfg.cargaMin)) + ' h. ' + stTxt(st('Carga horária total')) + '</p>' +
-    gLeg(cats.map(c => [c[2], c[0] + ': ' + fmt(c[1]) + ' h'])) +
-    '<div class="grow"><span class="rot">Carga total</span>' + gTrack(cats.map(c => ({v:c[1], cor:c[2], t:c[0] + ': ' + fmt(c[1]) + ' h'})), escT, [{v:num(P().cfg.cargaMin), t:'Mínimo: ' + fmt(num(P().cfg.cargaMin)) + ' h'}]) + '<span class="val">' + fmt(R.total) + ' h</span></div>' +
-    gEixo(escT, [{v:0, t:'0'}, {v:num(P().cfg.cargaMin), t:'mín. ' + fmt(num(P().cfg.cargaMin))}]) + '</div>';
+  const g1 = '<div class="box gbox"><h2>Composição da carga total</h2><p class="lead">' + fmt(R.total) + ' h nas categorias do histórico, para um mínimo de ' + fmt(num(P().cfg.cargaMin)) + ' h. ' + stTxt(st('Carga horária total')) + ' A faixa de baixo mostra onde está a extensão, que se sobrepõe às categorias e não se soma a elas.</p>' +
+    gLeg(H.map(c => [c.cor, c.nome + ': ' + fmt(c.ch) + ' h'])) +
+    '<div class="grow"><span class="rot">Categorias</span>' + gTrack(H.map(c => ({v:c.ch, cor:c.cor, t:c.nome + ': ' + fmt(c.ch) + ' h'})), escT, [{v:num(P().cfg.cargaMin), t:'Mínimo: ' + fmt(num(P().cfg.cargaMin)) + ' h'}]) + '<span class="val">' + fmt(R.total) + ' h</span></div>' +
+    '<div class="grow"><span class="rot">Extensão (sobreposta)</span>' + gTrackAbs(extSobreposta(R, P().comps, H), escT) + '<span class="val">' + fmt(R.extMin + R.livre) + ' h</span></div>' +
+    gEixo(escT, [{v:0, t:'0'}, {v:num(P().cfg.cargaMin), t:'mín. ' + fmt(num(P().cfg.cargaMin))}]) +
+    gLeg([['var(--s3)', 'Extensão fixa'], ['var(--s3)', 'Extensão pendente, à escolha', 'hext']]) + '</div>';
 
   /* 2. extensão: parte fixa, caminhos, piso e teto */
   const escE = Math.max(R.tetoExt, R.extMax) * 1.08;
   const fixa = {v:R.extMin, cor:'var(--s3)', t:'Parte fixa: ' + fmt(R.extMin) + ' h'};
   const opt = {v:R.optExtLivre, cor:'var(--s2)', t:'Optativas com extensão: até ' + fmt(R.optExtLivre) + ' h'};
-  const flx = {v:R.extFlex, cor:'var(--s4)', t:'Bloco flexível: até ' + fmt(R.extFlex) + ' h'};
+  const flx = {v:R.extFlex, cor:'var(--s5)', t:'Bloco flexível: até ' + fmt(R.extFlex) + ' h'};
   const marcas = [{v:R.piso, t:'Piso: ' + fmt(R.piso) + ' h (10%)'}, {v:R.tetoExt, t:'Teto no histórico: ' + fmt(R.tetoExt) + ' h (15%)', leve:true}];
   const linha = (rot, segs, ok, livreZero) => '<div class="grow"><span class="rot">' + rot + '</span>' + gTrack(segs, escE, marcas) + '<span class="val">' + fmt(segs.reduce((a, x) => a + x.v, 0)) + ' h' + (livreZero ? '' : ' <span class="gst ' + (ok ? 'ok' : 'bad') + '">' + (ok ? 'fecha' : 'não fecha') + '</span>') + '</span></div>';
   const g2 = '<div class="box gbox"><h2>Extensão: caminhos até o piso</h2><p class="lead">Parte fixa de ' + fmt(R.extMin) + ' h; piso de ' + fmt(R.piso) + ' h para cada estudante; teto de ' + fmt(R.tetoExt) + ' h no histórico. ' +
     (R.livre ? 'A parte livre, de ' + fmt(R.livre) + ' h, ' + (R.caminhoOpt && R.caminhoFlex ? 'fecha por qualquer dos dois caminhos.' : R.caminhoOpt ? 'só fecha pelas optativas.' : R.caminhoFlex ? 'só fecha pelo bloco flexível.' : (R.extMax >= R.piso ? 'só fecha combinando os dois caminhos.' : 'não fecha nem combinando os caminhos.')) : 'A parte fixa já alcança o piso.') + '</p>' +
-    gLeg([['var(--s3)', 'Parte fixa'], ['var(--s2)', 'Optativas com extensão'], ['var(--s4)', 'Bloco flexível']]) +
+    gLeg([['var(--s3)', 'Parte fixa'], ['var(--s2)', 'Optativas com extensão'], ['var(--s5)', 'Bloco flexível']]) +
     linha('Parte fixa', [fixa], R.extMin >= R.piso, true) +
     (R.livre ? linha('Fixa + optativas', [fixa, opt], R.caminhoOpt) + linha('Fixa + flexível', [fixa, flx], R.caminhoFlex) : '') +
     linha('Máximo possível', [fixa, opt, flx], R.extMax >= R.piso, R.livre === 0) +
@@ -1231,19 +1279,22 @@ function renderGraficos(){
     '<div class="gcolrot">' + R.per.map(x => '<span>' + x.p + 'º</span>').join('') + '</div>' +
     '<p class="foot">Linha vermelha: teto de ' + teto + ' h em sala. Coluna vermelha: período acima do teto.</p></div>';
 
-  /* 5. composição da parte fixa da carga */
-  const fx = R.cat.filter(c => c.teo != null);
-  const teoF = fx.reduce((a, c) => a + c.teo, 0), pratF = fx.reduce((a, c) => a + c.prat, 0), extF = fx.reduce((a, c) => a + c.ext, 0), escF = (teoF + pratF + extF) * 1.04;
-  const g5 = '<div class="box gbox"><h2>Teórica, prática e extensão na parte fixa</h2><p class="lead">Carga de componentes com composição definida (obrigatórios e aproveitamento' + (R.bloco ? ', mais o mínimo de optativas' : '') + '). Optativas e bloco flexível dependem da escolha do estudante.</p>' +
-    gLeg([['var(--s1)', 'Teórica: ' + fmt(teoF) + ' h'], ['var(--s2)', 'Prática: ' + fmt(pratF) + ' h'], ['var(--s3)', 'Extensão: ' + fmt(extF) + ' h']]) +
-    '<div class="grow"><span class="rot">Parte fixa</span>' + gTrack([{v:teoF, cor:'var(--s1)', t:'Teórica: ' + fmt(teoF) + ' h'}, {v:pratF, cor:'var(--s2)', t:'Prática: ' + fmt(pratF) + ' h'}, {v:extF, cor:'var(--s3)', t:'Extensão: ' + fmt(extF) + ' h'}], escF) + '<span class="val">' + fmt(teoF + pratF + extF) + ' h</span></div></div>';
+  /* 5. componentes que incorporam extensão */
+  const ce = P().comps.filter(x => num(x.ext) > 0 || (x.tipo === 'ac' && num(x.extTeto) > 0))
+    .map(x => ({n:x.n, v:x.tipo === 'ac' ? Math.min(chOf(x), num(x.extTeto)) : num(x.ext), tipo:x.tipo, p:+x.p || 0}))
+    .sort((a, b) => ({obr:0, apr:1, opt:2, ac:3})[a.tipo] - ({obr:0, apr:1, opt:2, ac:3})[b.tipo] || a.p - b.p);
+  const corT = {obr:'var(--s3)', apr:'var(--s3)', opt:'var(--s2)', ac:'var(--s5)'}, rotT = {obr:'obrigatório (fixa)', apr:'aproveitamento (fixa)', opt:'optativa (à escolha)', ac:'flexível (à escolha, até)'};
+  const escCE = Math.max(60, ...ce.map(x => x.v)) * 1.05;
+  const g5 = '<div class="box gbox"><h2>Componentes que incorporam extensão</h2><p class="lead">Cada barra é a carga de extensão do componente. A fixa vem dos obrigatórios; o restante, até o piso de ' + fmt(R.piso) + ' h, das escolhas do estudante.</p>' +
+    gLeg([['var(--s3)', 'Fixa'], ['var(--s2)', 'Optativa'], ['var(--s5)', 'Bloco flexível']]) +
+    ce.map(x => '<div class="grow"><span class="rot" title="' + esc(x.n) + '">' + esc(curto(x.n).replace(/\s+—.*$/, '')) + '</span>' + gTrack([{v:x.v, cor:corT[x.tipo], t:x.n + ': ' + (x.tipo === 'ac' ? 'até ' : '') + x.v + ' h de extensão, ' + rotT[x.tipo]}], escCE) + '<span class="val">' + (x.tipo === 'ac' ? 'até ' : '') + x.v + ' h</span></div>').join('') + '</div>';
 
   /* 6. comparação com as demais propostas */
   const outras = S.props.map(p => ({p, r: p === P() ? R : calc(p)}));
   const escC = Math.max(...outras.map(o => o.r.total)) * 1.04;
-  const g6 = outras.length < 2 ? '' : '<div class="box gbox" style="grid-column:1/-1"><h2>Comparação entre propostas</h2><p class="lead">Carga total por categoria e extensão fixa de cada proposta guardada nesta área de trabalho.</p>' +
-    gLeg([['var(--s1)', 'Obrigatórios'], ['var(--s2)', 'Optativas'], ['var(--s3)', 'Complementares ou flexíveis'], ['var(--s4)', 'Aproveitamento']]) +
-    outras.map(o => '<div class="grow"><span class="rot">' + esc(o.p.nome) + '</span>' + gTrack([{v:o.r.obrCH, cor:'var(--s1)', t:'Obrigatórios: ' + fmt(o.r.obrCH) + ' h'}, {v:o.r.optExig, cor:'var(--s2)', t:'Optativas: ' + fmt(o.r.optExig) + ' h'}, {v:o.r.acCH, cor:'var(--s3)', t:'Complementares ou flexíveis: ' + fmt(o.r.acCH) + ' h'}, {v:o.r.aprCH, cor:'var(--s4)', t:'Aproveitamento: ' + fmt(o.r.aprCH) + ' h'}], escC, [{v:num(o.p.cfg.cargaMin), t:'Mínimo: ' + fmt(num(o.p.cfg.cargaMin)) + ' h', leve:true}]) + '<span class="val">' + fmt(o.r.total) + ' h · ext. fixa ' + fmt(o.r.extMin) + ' h</span></div>').join('') + '</div>';
+  const g6 = outras.length < 2 ? '' : '<div class="box gbox" style="grid-column:1/-1"><h2>Comparação entre propostas</h2><p class="lead">Para cada proposta, a primeira faixa mostra as categorias do histórico; a segunda, a extensão sobreposta a elas.</p>' +
+    gLeg([['var(--s1)', 'Básicos profissionais'], ['var(--s4)', 'Complementares obrigatórios'], ['var(--s2)', 'Optativos'], ['var(--s5)', 'Flexíveis'], ['var(--s3)', 'Extensão fixa (sobreposta)'], ['var(--s3)', 'Extensão pendente', 'hext']]) +
+    outras.map(o => { const Ho = catHist(o.r, o.p.comps); return '<div class="grow"><span class="rot">' + esc(o.p.nome) + '</span><div>' + gTrack(Ho.map(c => ({v:c.ch, cor:c.cor, t:c.nome + ': ' + fmt(c.ch) + ' h'})), escC, [{v:num(o.p.cfg.cargaMin), t:'Mínimo: ' + fmt(num(o.p.cfg.cargaMin)) + ' h', leve:true}]) + gTrackAbs(extSobreposta(o.r, o.p.comps, Ho), escC) + '</div><span class="val">' + fmt(o.r.total) + ' h · extensão ' + fmt(o.r.extMin) + ' fixa + ' + fmt(o.r.livre) + ' pendente</span></div>'; }).join('') + '</div>';
 
   $('graficos').innerHTML = g1 + g2 + g3 + g4 + g5 + g6;
 }
