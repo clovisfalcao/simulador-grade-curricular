@@ -74,7 +74,7 @@ A distinção entre norma e diretriz é deliberada e deve ser mantida. A cada al
 
 Cabeçalho com proposta, duplicar, renomear, excluir, exportar, importar e restaurar originais; pontos de controle; botão do visual escuro (o claro é o padrão). Abas:
 
-- **Grade e pré-requisitos**: arrastar entre períodos, modo ligação, cadeia mais longa e etiquetas de extensão e de "a decidir".
+- **Grade e pré-requisitos**: arrastar entre períodos, modo ligação, cadeia mais longa e etiquetas de extensão e de "em discussão".
 - **Tabela de componentes**.
 - **Conformidade**: parâmetros, com a extensão aproveitável no bloco flexível.
 - **Totais**: totalização no formato do histórico, creditação de extensão com a tabela "Como se monta a oferta de extensão", obrigatórios por eixo, carga por período, art. 13 e comparação entre propostas.
