@@ -33,10 +33,13 @@ Os dados carregados são propostas de trabalho. Nenhuma delas representa deliber
 
 ## Propostas incluídas
 
-- **Proposta de trabalho (padrão)**: grade revisada após a reunião do NDE, com os Laboratórios como atividade de orientação coletiva, Direito do Consumidor obrigatório e o novo modelo de extensão. É a versão que abre por padrão.
-- **Versão anterior**: o estudo preliminar discutido na reunião do NDE de 18 de setembro de 2026, reproduzido para comparação. Passa pelas mesmas verificações, o que mostra o que ele atendia e o que não atendia.
+- **Grade atualizada (16/10) (padrão)**: base de 19.09.2026 com as decisões de 15 e 16.10.2026. A extensão integra a carga total (piso de 10%, teto de 15% no histórico); acaba o mínimo de UCE optativas; atividades complementares e extensão em programas e projetos formam um bloco flexível de 240 h, do qual até X h contam como extensão; Medicina Legal passa a optativa e entra Criminologia, Política Criminal e Leis Penais Especiais no 10º período; entram Libras e duas UCE optativas a criar.
+- **Variante: duas UCE obrigatórias (16/10)**: sai a UCE-OB III e as optativas sobem para 300 h.
+- **Versão de 19/09** e **Versão de 18/09 (estudo preliminar)**: mantidas para comparação. Passam pelas mesmas verificações.
 
-As alterações são recalculadas na hora. Para testar alternativas sem perder a base, use **Duplicar** e altere a cópia; a aba Totais compara as propostas lado a lado. **Restaurar originais** volta às duas propostas de partida.
+Componentes com a etiqueta **a decidir** dependem do NDE ou do Colegiado; a etiqueta se marca ou desmarca no painel do componente.
+
+As alterações são recalculadas na hora. Para testar alternativas sem perder a base, use **Duplicar** e altere a cópia; a aba Totais compara as propostas lado a lado. **Restaurar originais** volta às quatro propostas de partida.
 
 ## Como usar
 

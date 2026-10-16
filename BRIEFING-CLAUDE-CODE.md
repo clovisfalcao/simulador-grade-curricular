@@ -8,7 +8,7 @@ O curso de Bacharelado em Direito de Santa Rita (Departamento de Ciências Jurí
 
 Existe um simulador anterior, feito por um professor do NDE: <https://hugobelmorais-oss.github.io/simulador-ppc-dcj/> (repositório `hugobelmorais-oss/simulador-ppc-dcj`). Ele soma cargas horárias por período e por natureza e verifica apenas a faixa de extensão. Este aplicativo foi criado para cobrir o que aquele não cobre: pré-requisitos, duração mínima, decomposição da carga horária e as demais exigências normativas.
 
-O aplicativo traz duas propostas de partida. A **Proposta de trabalho** (id `base`, antes chamada "Versão de 19.09.2026") é a versão padrão: abre selecionada e aparece como "(padrão)" no seletor. A **Versão anterior** (id `anterior`) reproduz o "Estudo preliminar da grade" discutido na reunião do NDE de 18.09.2026, fiel ao documento, e serve de alternativa para comparação, com as mesmas verificações. As alterações são feitas a partir da proposta de trabalho; para testar alternativas, duplica-se a proposta. Nenhuma proposta foi deliberada pelo NDE ou pelo Colegiado. Isso precisa continuar claro em qualquer texto do aplicativo ou do repositório.
+O aplicativo traz quatro propostas de partida, nesta ordem: **Grade atualizada (16/10)** (id `v1610`), a versão padrão, que abre selecionada e aparece como "(padrão)"; **Variante: duas UCE obrigatórias (16/10)** (id `v1610-2uce`), em que sai a UCE-OB III e as optativas passam a 300 h; **Versão de 19/09** (id `base`); e **Versão de 18/09 (estudo preliminar)** (id `anterior`), fiel ao documento discutido pelo NDE em 18.09.2026. As duas últimas ficam para comparação na aba Totais. Quem já usava o simulador recebe as propostas novas uma vez, sem perder edições, e a nova padrão passa a abrir primeiro. Nenhuma proposta foi deliberada pelo NDE ou pelo Colegiado. Isso precisa continuar claro em qualquer texto do aplicativo ou do repositório.
 
 ## 2. Finalidade
 
@@ -70,6 +70,8 @@ O estado é `{props: [proposta, ...], ativo: id}`. Não há salvamento automáti
 | `bas` | Conta como conteúdo básico profissional |
 | `a13` | Conta no teto de atividades complementares e prática jurídica |
 | `obs` | Observação livre, exibida no painel |
+| `status` | `"possibilidade"` marca componente que depende do NDE ou do Colegiado; o cartão mostra a etiqueta "a decidir", que se marca ou desmarca no painel |
+| `extTeto`, `extTetoOpcoes` | Só no bloco flexível: até quanto conta como extensão e as opções em discussão |
 | `ref` | Referência interna aos documentos de trabalho; não é exibida |
 
 Convenções: disciplinas têm carga integralmente teórica; atividades de orientação têm carga integralmente prática; unidades curriculares de extensão têm carga integralmente extensionista. Um crédito equivale a 15 h. Só disciplina e módulo ocupam dia no horário (RGG, art. 38, § 1º).
@@ -81,8 +83,12 @@ Princípio adotado pelo coordenador: há duas classificações independentes. A 
 Ficam no bloco "núcleo de cálculo", nas funções `calc(P)` e `verificacoes(P, R)`, que não acessam o DOM. Preserve essa separação.
 
 - **Carga total** = obrigatórios + atividades complementares + extensão por aproveitamento + `optExig`. Optativas do banco não entram; a carga de optativas entra pelo parâmetro.
-- **Extensão garantida** = extensão dos obrigatórios + extensão por aproveitamento + `blocoUCE`.
-- **Extensão máxima** = a mesma base + o menor valor entre `optExig` e a oferta de extensão cadastrada no banco de optativas (nunca menos que o bloco). Exibe-se também a hipótese de todas as optativas serem cursadas em UCE.
+- **Extensão** (decisões de 15 e 16.10.2026): a extensão integra a carga total. As mesmas horas contam na categoria do componente (obrigatório, optativo, flexível) e como extensão; os 10% não elevam a carga total. Extensão pendente impede a conclusão.
+- **Parte fixa** (`R.extMin`) = extensão dos obrigatórios + extensão por aproveitamento + `blocoUCE` (este só nas versões de 19/09 e 18/09; nas novas, `blocoUCE = 0`, sem mínimo de UCE optativas).
+- **Piso por estudante** (`R.piso`) = 10% da carga total, arredondado para cima (372 h com 3.720 h). **Teto no histórico** (`R.tetoExt`) = 15%, arredondado para baixo (558 h). Não são parâmetros: seguem a carga total.
+- **Parte livre** (`R.livre`) = piso − parte fixa. **Caminho das optativas** (`R.optExtLivre`) = menor valor entre a CH de optativas exigida e a oferta de extensão no banco. **Caminho do bloco flexível** (`R.extFlex`) = soma, nos componentes de tipo `ac`, do menor valor entre a carga e `extTeto`. Cada caminho fecha o piso se cobrir sozinho a parte livre.
+- **Bloco flexível**: componente de tipo `ac` (240 h) com `extTeto` (até quanto conta como extensão) e `extTetoOpcoes` (120, 135, 150, 180, 195; padrão 195), escolhido na aba Conformidade.
+- **Extensão máxima** (`R.extMax`) = parte fixa + caminho das optativas + caminho do bloco flexível.
 - **Básicos profissionais** = soma dos obrigatórios com `bas`.
 - **Atividades complementares e prática jurídica** = soma dos itens com `a13`, exceto optativas.
 - **Horas em sala por período** = obrigatórios de natureza disciplina ou módulo no período.
@@ -101,7 +107,7 @@ Ficam no bloco "núcleo de cálculo", nas funções `calc(P)` e `verificacoes(P,
 |---|---|
 | Carga total mínima | DCN (Res. CNE/CES 5/2018, alterada pela Res. CNE/CES 2/2021), art. 12; Res. CNE/CES 2/2007, anexo |
 | Duração mínima de cinco anos | Res. CNE/CES 2/2007, art. 2º, III, "d" |
-| Extensão entre 10% e 15% em qualquer trajetória | Res. CONSEPE 02/2022, art. 6º |
+| Extensão: piso de 10% alcançável por todo estudante; parte fixa até o teto de 15% | Res. CONSEPE 02/2022, art. 6º |
 | Básicos profissionais no mínimo 50% | RGG (Res. CONSEPE 29/2020), art. 16, § 2º, I |
 | Atividades complementares e prática jurídica no máximo 20% | DCN, art. 13; Res. CNE/CES 2/2007, art. 1º, parágrafo único |
 | Pré-requisito em nível anterior | RGG, art. 33, § 1º |
@@ -109,7 +115,7 @@ Ficam no bloco "núcleo de cálculo", nas funções `calc(P)` e `verificacoes(P,
 
 Cada verificação guarda, no campo `ref`, o código interno dos documentos de trabalho do NDE (H1, I3, D1 etc.). Esse campo nunca é exibido: a tela mostra só a fonte legível (norma ou "Diretriz do NDE"), porque quem opera o aplicativo não tem acesso a esses documentos. O mesmo vale para o campo `ref` dos componentes.
 
-**Diretrizes do NDE**: teto em sala por período; obrigatórios com período; disciplinas obrigatórias com 60 h; componentes numerados (I, II, III) em períodos seguidos, com as UCE dispensadas; Penal I a III nos mesmos períodos de Civil I a III; cadeia de disciplinas até o último período; elos sem redundância; limites de matrícula; oferta suficiente para o bloco de UCE optativas; vedação de carga de extensão em componente de prática jurídica; créditos inteiros.
+**Diretrizes do NDE**: caminhos para o piso de extensão (aviso se só um fecha; atenção se nenhum fecha sozinho); teto em sala por período; obrigatórios com período; disciplinas obrigatórias com 60 h; componentes numerados (I, II, III) em períodos seguidos, com as UCE dispensadas; Penal I a III nos mesmos períodos de Civil I a III; cadeia de disciplinas até o último período; elos sem redundância; limites de matrícula; oferta suficiente para o bloco de UCE optativas; vedação de carga de extensão em componente de prática jurídica; créditos inteiros.
 
 A distinção entre norma e diretriz interna é deliberada e deve ser mantida.
 
@@ -132,19 +138,20 @@ A página abre sempre no visual claro e sóbrio (fundos quase brancos, cores des
 
 Qualquer alteração no núcleo de cálculo deve reproduzir estes resultados com os dados de partida:
 
-| Indicador | Proposta de trabalho | Versão anterior |
-|---|---:|---:|
-| Carga total | 3.720 h | 3.798 h |
-| CH teórica / prática / extensão | 2.760 / 420 / 420 h | 2.820 / 390 / 468 h |
-| Extensão garantida | 11,3% | 12,3% |
-| Extensão máxima com o banco atual | 11,3% | 12,3% |
-| Básicos profissionais | 2.100 h, 56,5% | 2.040 h, 53,7% |
-| AC e prática jurídica | 570 h, 15,3% | 738 h, 19,4% (margem de 22 h) |
-| Cadeia mais longa | 10 períodos | 10 períodos |
-| Cadeia só de disciplinas | 10 | 10 (Laboratórios eram disciplinas) |
-| Simulação com matrícula máxima | 10 períodos | 10 períodos |
-| Elos sensíveis | 3 | 5 |
-| Matrícula mínima / máxima | 240 / 420 h | 255 / 405 h |
+| Indicador | Grade 16/10 | Variante 2 UCE | Versão 19/09 | Versão 18/09 |
+|---|---:|---:|---:|---:|
+| Obrigatórios + optativas + flexíveis/AC + aproveitamento | 3.240 + 240 + 240 + 0 | 3.180 + 300 + 240 + 0 | 3.240 + 240 + 120 + 120 | 3.150 + 240 + 120 + 288 |
+| Carga total | 3.720 h | 3.720 h | 3.720 h | 3.798 h |
+| Extensão fixa | 180 h | 120 h | 420 h | 468 h |
+| Piso / teto de extensão | 372 / 558 h | 372 / 558 h | 372 / 558 h | 380 / 569 h |
+| Parte livre | 192 h | 252 h | 0 | 0 |
+| Fecha só por optativas / só pelo flexível (X = 195) | sim / sim | não / não | dispensa | dispensa |
+| Com X = 120 | sim / não (faltam 72 h) | não / não | — | — |
+| Básicos profissionais | 56,5% | 56,5% | 56,5% | 53,7% |
+| AC e prática jurídica | 15,3% | 15,3% | 15,3% | 19,4% |
+| Cadeia mais longa / simulação | 10 / 10 | 10 / 10 | 10 / 10 | 10 / 10 |
+| Elos sensíveis | 3 | 3 | 3 | 5 |
+| Matrícula mínima / máxima | 240 / 420 h | 240 / 420 h | 240 / 420 h | 255 / 405 h |
 
 A versão anterior segue o documento: Sociologia Jurídica e Direito Previdenciário com esses nomes; Serviço de Assessoria I no 6º período, com pré-requisito em Teoria Geral do Processo, e Serviço II no 7º; UCE-OB III dependente de Processual Civil I e Processual Penal I; Trabalho de Curso como atividade de orientação coletiva, sem período, no bloco de creditação; nenhuma optativa cadastrada, porque o documento não as lista. Os pré-requisitos de UCE-OB I e II e os demais que o documento não detalha vêm da versão original dos dados.
 
@@ -164,7 +171,8 @@ Na proposta de trabalho, as duas cadeias de dez períodos são: Introdução à 
 
 ## 11. Pendências normativas que afetam o aplicativo
 
-- Falta confirmar com os setores responsáveis da UFPB como a optativa de extensão é registrada no histórico do estudante. O simulador adota a lógica da seção 6: ela conta uma vez, como optativa, e sua carga de extensão entra no percentual de extensão. A faixa "Como usar" explica essa lógica e registra a pendência. A proposta usa 240 h de optativas; o currículo atual, 180 h.
+- A contagem da extensão dentro da categoria do componente está confirmada pela Res. CONSEPE 02/2022, pelo Manual da Creditação PROEX/PRG, pela Res. CONSEPE 26/2023 e pelos históricos do SIGAA. A antiga pendência sobre o registro no histórico foi retirada da tela.
+- Ficam a decidir (etiqueta "a decidir"): Medicina Legal como optativa, o obrigatório Criminologia, Política Criminal e Leis Penais Especiais (nome provisório), Libras, as duas UCE optativas a criar e o bloco flexível com o valor de X. A proposta usa 240 h de optativas; o currículo atual, 180 h.
 
 - A vedação de dupla contagem entre extensão e prática jurídica é citada na nota como IN PRG-PROEX 02/2024, art. 4º, IV. O texto dessa instrução normativa não foi conferido. Por isso o aplicativo apoia a regra apenas no Ementário 2026 e a classifica como diretriz. Não altere essa classificação sem o texto da norma.
 - A tipologia dos componentes curriculares está no RGG, art. 16, § 1º (disciplina, módulo, bloco, atividade de orientação individual e coletiva); o regime das atividades de orientação, nos arts. 38, § 3º, 49 e 50. O aplicativo não oferece a natureza "bloco".
