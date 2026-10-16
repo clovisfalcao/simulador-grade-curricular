@@ -79,7 +79,7 @@ Cabeçalho com proposta, duplicar, renomear, excluir, exportar, importar e resta
 - **Conformidade**: parâmetros, com a extensão aproveitável no bloco flexível.
 - **Totais**: totalização no formato do histórico, creditação de extensão com a tabela "Como se monta a oferta de extensão", obrigatórios por eixo, carga por período, art. 13 e comparação entre propostas.
 - **Gráficos**: composição da carga com a extensão sobreposta, caminhos da extensão, carga por período, componentes com extensão e comparação.
-- **Equivalências**: dado estático (`EQUIV`, com `linhas` e `grupos` A a E), estudo de 16.10.2026 revisado. Regra (RGG, art. 35): só há equivalência, componente a componente, quando o conteúdo é equivalente e a carga de 2019 é maior ou igual à nova. Com carga menor, aparece "Sem equivalência (faltam X h)". Optativas são avaliadas uma a uma, nunca em bloco: o grupo E traz só uma nota dizendo que a equivalência das optativas de 2019 será feita disciplina por disciplina quando o elenco for definido. `emDiscussao` gera a etiqueta "a decidir". A coluna de código de 2019 fica em branco para preenchimento. Cinco regras do estudo aparecem abaixo da tabela.
+- **Equivalências**: dado estático (`EQUIV`, com `linhas` e `grupos` A a E), estudo de 16.10.2026 revisado. Regra (RGG, art. 35): só há equivalência, componente a componente, quando o conteúdo é equivalente e a carga de 2019 é maior ou igual à nova. Com carga menor, aparece "Sem equivalência (faltam X h)". Optativas são avaliadas uma a uma, nunca em bloco: o grupo E traz uma nota dizendo que a equivalência das optativas de 2019 será feita disciplina por disciplina quando o elenco for definido. Flexíveis não têm equivalência: não têm ementa, são a forma de o currículo registrar as horas de atividades complementares (nota no grupo E; a antiga linha Tópicos Especiais → Atividades flexíveis saiu). `emDiscussao` gera a etiqueta "a decidir". A coluna de código de 2019 fica em branco para preenchimento. Cinco regras do estudo aparecem abaixo da tabela.
 
 A exportação gera o `.json` das propostas e a planilha `.csv` da estrutura (período, categoria no histórico, natureza, carga decomposta, créditos, pré-requisitos, situação).
 
@@ -97,7 +97,7 @@ Qualquer alteração no núcleo de cálculo deve reproduzir:
 | AC e prática jurídica | 600 h, 16,0% | 738 h, 19,4% |
 | Cadeia / simulação / elos sensíveis | 10 / 10 / 3 | 10 / 11 / 5 |
 | Matrícula | 240 a 420 h adotados; pela regra, 234 a 351 h | 226 a 339 h, pela regra |
-| Equivalências | 46 equivalentes e 7 sem equivalência pela carga, em 75 linhas | — |
+| Equivalências | 46 equivalentes e 7 sem equivalência pela carga, em 74 linhas | — |
 
 ## 9. Pendências e limitações
 
