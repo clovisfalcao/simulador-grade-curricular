@@ -23,10 +23,10 @@ O GitHub Pages publica a branch `claude/nice-babbage-pqpsnj`. O `.gitignore` exc
 
 ## 3. Propostas de partida
 
-- **Grade de trabalho (16/10)** (id `atual`): a proposta atual e padrão, com os ajustes da reunião de 16.10.2026. História do Direito no 1º período e Economia Política no 2º. Direito Empresarial I no 5º, por decisão do coordenador. UCE-OB I, II e III no 3º, 4º e 5º, em sequência. Com isso o 5º período tem 360 h em sala, e a conformidade acusa o estouro; o remanejamento ainda não foi decidido. Criminologia obrigatória no 10º e Leis Penais Especiais optativa, as duas só com Direito Penal III como pré-requisito (o coordenador prefere um pré-requisito por disciplina). Serviços de Assessoria I e II com 60 h de prática. Pesquisa Aplicada ao Direito com 30 h, como exceção em discussão. Carga total de 3.750 h, marcada em discussão (`cfg.cargaEmDiscussao`). Matrícula de 240 h a 420 h, valores arredondados e não definitivos (`cfg.matMin`, `cfg.matMax`).
+- **Grade de trabalho (16/10)** (id `atual`): a proposta atual e padrão, com os ajustes da reunião de 16.10.2026. História do Direito no 1º período e Economia Política no 2º. Direito Empresarial I no 8º, em discussão (no 5º, aquele período passaria a 360 h em sala). UCE-OB I, II e III no 3º, 4º e 5º, em sequência. Criminologia obrigatória no 10º e Leis Penais Especiais optativa, as duas só com Direito Penal III como pré-requisito (o coordenador prefere um pré-requisito por disciplina). Serviços de Assessoria I e II com 60 h de prática. Pesquisa Aplicada ao Direito com 30 h, como exceção em discussão. Carga total de 3.750 h, marcada em discussão (`cfg.cargaEmDiscussao`). Matrícula de 240 h a 420 h, valores arredondados e não definitivos (`cfg.matMin`, `cfg.matMax`).
 - **Versão de 18/09 (memória)** (id `anterior`): o estudo preliminar discutido em 18.09.2026, fiel ao documento, mantido para comparação.
 
-Variantes intermediárias (grade de 16/10 antes dos ajustes, variante de duas UCE, versão de 19/09) saíram. `incluirModelos` as retira uma única vez de quem as tinha salvas (marcador `retirados-2` em `S.modelos`), devolve Direito Empresarial I ao 5º em quem salvou a grade com ele no 8º (marcador `ajuste-1`), acrescenta as propostas novas e abre a atual.
+Variantes intermediárias (grade de 16/10 antes dos ajustes, variante de duas UCE, versão de 19/09) saíram. `incluirModelos` as retira uma única vez de quem as tinha salvas (marcador `retirados-2` em `S.modelos`), leva Direito Empresarial I ao 8º, em discussão, em quem salvou a grade antes dessa decisão (marcador `ajuste-2`), acrescenta as propostas novas e abre a atual.
 
 ## 4. Modelo de dados
 
@@ -47,7 +47,7 @@ O estado é `{props: [proposta, ...], ativo: id, modelos: [...]}`. Não há salv
 | `pre`, `ded` | Pré-requisitos e os deduzidos de ementa |
 | `bas`, `a13` | Básico profissional; conta no teto de atividades complementares e prática jurídica |
 | `extTeto`, `extTetoOpcoes`, `extFixa` | Nos flexíveis: até quanto conta como extensão, as opções em discussão (120 a 195 h) e se essa extensão é obrigatória para todos |
-| `status` | `"possibilidade"`: etiqueta "a decidir", que se marca no painel |
+| `status`, `disc` | `status: "possibilidade"` mostra a etiqueta amarela "em discussão", marcada no painel. Só com ela marcada aparece o campo "O que está em discussão" (`disc`), que pode ficar em branco e serve de dica no cartão. Desmarcar apaga `disc` |
 | `obs`, `ref` | Observação exibida; referência interna não exibida |
 
 ## 5. Regras de cálculo
@@ -66,7 +66,7 @@ Ficam em `calc(P)` e `verificacoes(P, R)`, que não acessam a página. Preserve 
 
 **Exigências normativas**: carga total (DCN, art. 12); duração mínima (Res. CNE/CES 2/2007); extensão, com piso, teto e os dois caminhos no mesmo item (Res. CONSEPE 02/2022, art. 6º); básicos profissionais (RGG, art. 16, § 2º, I); atividades complementares e prática jurídica até 20% (DCN, art. 13); pré-requisito em nível anterior (RGG, art. 33, § 1º); extensão só em disciplina, módulo ou UCE (Res. CONSEPE 02/2022, art. 7º).
 
-**Diretrizes do NDE**: no máximo 300 h em sala por período; cadeia formativa só de disciplinas; pré-requisitos que mantêm o estudante por 10 períodos (com os elos sensíveis listados); limites de matrícula (selo "Em discussão"); obrigatórios com 60 h (exceções marcadas "a decidir" aparecem como "Em discussão"); Penal acompanha Civil; extensão fora da prática jurídica (com base no Ementário 2026).
+**Diretrizes do NDE**: no máximo 300 h em sala por período; cadeia formativa só de disciplinas; pré-requisitos que mantêm o estudante por 10 períodos (com os elos sensíveis listados); limites de matrícula (selo "Em discussão"); obrigatórios com 60 h (exceções marcadas em discussão aparecem com o selo "Em discussão"); Penal acompanha Civil; extensão fora da prática jurídica (com base no Ementário 2026).
 
 A distinção entre norma e diretriz é deliberada e deve ser mantida. A cada alteração, a faixa de avisos mostra o que mudou nos indicadores e os problemas novos.
 
@@ -79,7 +79,7 @@ Cabeçalho com proposta, duplicar, renomear, excluir, exportar, importar e resta
 - **Conformidade**: parâmetros, com a extensão aproveitável no bloco flexível.
 - **Totais**: totalização no formato do histórico, creditação de extensão com a tabela "Como se monta a oferta de extensão", obrigatórios por eixo, carga por período, art. 13 e comparação entre propostas.
 - **Gráficos**: composição da carga com a extensão sobreposta, caminhos da extensão, carga por período, componentes com extensão e comparação.
-- **Equivalências**: dado estático (`EQUIV`, com `linhas` e `grupos` A a E), estudo de 16.10.2026 revisado. Regra (RGG, art. 35): só há equivalência, componente a componente, quando o conteúdo é equivalente e a carga de 2019 é maior ou igual à nova. Com carga menor, aparece "Sem equivalência (faltam X h)". Optativas são avaliadas uma a uma, nunca em bloco: o grupo E traz uma nota dizendo que a equivalência das optativas de 2019 será feita disciplina por disciplina quando o elenco for definido. Flexíveis não têm equivalência: não têm ementa, são a forma de o currículo registrar as horas de atividades complementares (nota no grupo E; a antiga linha Tópicos Especiais → Atividades flexíveis saiu). `emDiscussao` gera a etiqueta "a decidir". A coluna de código de 2019 fica em branco para preenchimento. Cinco regras do estudo aparecem abaixo da tabela.
+- **Equivalências**: dado estático (`EQUIV`, com `linhas` e `grupos` A a E), versão final do estudo de 16.10.2026. Regra (RGG, art. 35): só há equivalência, componente a componente, quando o conteúdo é equivalente e a carga de 2019 é maior ou igual à nova; com carga menor, aparece "Sem equivalência (faltam X h)". Não há equivalência em bloco: cada Prática de 2019 é avaliada contra o seu Laboratório; optativas e obrigatórios do grupo D só aproveitam se corresponderem a uma optativa determinada; flexíveis não têm equivalência porque não têm ementa (nota no grupo E). `emDiscussao` gera a etiqueta "em discussão". A coluna de código de 2019 fica em branco para preenchimento. Seis regras do estudo aparecem abaixo da tabela.
 
 A exportação gera o `.json` das propostas e a planilha `.csv` da estrutura (período, categoria no histórico, natureza, carga decomposta, créditos, pré-requisitos, situação).
 
@@ -90,18 +90,18 @@ Qualquer alteração no núcleo de cálculo deve reproduzir:
 | Indicador | Grade de trabalho (16/10) | Versão de 18/09 |
 |---|---:|---:|
 | Obrigatórios + optativas + flexíveis | 3.270 + 240 + 240 = 3.750 h | 3.150 + 240 + 408 = 3.798 h |
-| Horas em sala por período | 300 no 1º ao 4º, 6º e 7º; 360 no 5º (acima do teto); 180 no 8º; 240 no 9º e 10º | 300 em todos |
+| Horas em sala por período | 300 do 1º ao 7º; 240 do 8º ao 10º | 300 em todos |
 | Extensão fixa / piso / teto | 180 / 375 / 562 h | 468 / 380 / 569 h |
 | Parte livre e caminhos | 195 h; optativas até 240 h e flexíveis até 195 h, os dois fecham | 0 |
 | Básicos profissionais | 2.100 h, 56,0% | 2.040 h, 53,7% |
 | AC e prática jurídica | 600 h, 16,0% | 738 h, 19,4% |
 | Cadeia / simulação / elos sensíveis | 10 / 10 / 3 | 10 / 11 / 5 |
 | Matrícula | 240 a 420 h adotados; pela regra, 234 a 351 h | 226 a 339 h, pela regra |
-| Equivalências | 46 equivalentes e 7 sem equivalência pela carga, em 74 linhas | — |
+| Equivalências | 45 equivalentes e 7 sem equivalência pela carga, em 74 linhas | — |
 
 ## 9. Pendências e limitações
 
-- Em discussão: carga total de 3.750 h, período de Psicologia Jurídica, Criminologia (pode voltar a ser "Criminologia, Política Criminal e Leis Penais Especiais"), Leis Penais Especiais, forma de integralização da extensão na UCE-OB III, exceção de 30 h de Pesquisa Aplicada, limites de matrícula, Medicina Legal optativa, Libras, UCE optativas a criar e o valor de X no bloco flexível.
+- Em discussão: carga total de 3.750 h, posição de Direito Empresarial I, período de Psicologia Jurídica, Criminologia (pode voltar a ser "Criminologia, Política Criminal e Leis Penais Especiais"), Leis Penais Especiais, forma de integralização da extensão na UCE-OB III, exceção de 30 h de Pesquisa Aplicada, limites de matrícula, Medicina Legal optativa, Libras, UCE optativas a criar e o valor de X no bloco flexível.
 - Os Serviços de Assessoria I e II podem ter parte curricularizada como extensão; isso não está aplicado.
 - A tabela de equivalências não acompanha as alterações da grade. Faltam os códigos SIGAA de 2019, a conferência de ementas e a verificação no SIGAA de Hermenêutica, Integração Econômica, Direitos Humanos do Trabalhador e Libras.
 - Os dados ficam no navegador de quem usa. Compartilhar exige exportar e importar.

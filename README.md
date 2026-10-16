@@ -11,7 +11,7 @@ Página publicada: https://clovisfalcao.github.io/simulador-grade-curricular/
 - **Grade de trabalho (16/10) (padrão)**: proposta atual, com os ajustes da reunião de 16.10.2026. São 3.270 h de obrigatórias, 240 h de optativas e 240 h de flexíveis, num total de 3.750 h (em discussão).
 - **Versão de 18/09 (memória)**: estudo preliminar discutido pelo NDE em 18.09.2026, mantido para comparação.
 
-Componentes com a etiqueta **a decidir** dependem do NDE ou do Colegiado. A etiqueta se marca ou desmarca no painel do componente.
+Componentes com a etiqueta amarela **em discussão** têm algum ponto em aberto. Ela se marca ou desmarca no painel do componente; marcada, abre o campo "O que está em discussão".
 
 ## O que o simulador faz
 
