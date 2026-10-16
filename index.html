@@ -248,6 +248,11 @@ tfoot td{font-weight:600; background:var(--surface-2)}
 .hext{background:repeating-linear-gradient(45deg, var(--s3) 0 2px, transparent 2px 5px)!important}
 .gabs{position:absolute; top:0; bottom:0; display:block}
 .gabs.ini{border-radius:4px 0 0 4px} .gabs.fim{border-radius:0 4px 4px 0}
+.mini{display:inline-block; position:relative; width:110px; height:10px; background:var(--surface-2); border-radius:2px; vertical-align:middle; margin-right:6px}
+.mini i{position:absolute; left:0; top:0; bottom:0; background:var(--s3); border-radius:2px}
+.mini b{position:absolute; top:-3px; bottom:-3px; width:2px; background:var(--ink)}
+.mini b.t{background:var(--muted)}
+table.monta td{white-space:normal}
 .card .extb{align-self:flex-start; font-size:.68rem; font-weight:600; padding:0 6px; border-radius:999px; color:var(--ok); background:var(--ok-soft)}
 .hach{background:repeating-linear-gradient(45deg, var(--s1) 0 2px, transparent 2px 5px)!important; opacity:.7}
 
@@ -1164,17 +1169,39 @@ function renderTotais(){
     '<div class="bar"><span>' + x.p + 'º</span><span class="track" title="' + x.sala + ' h em sala e ' + x.orient + ' h de orientação"><i class="s" style="width:' + (x.sala / escala * 100) + '%"></i><i class="o" style="width:' + (x.orient / escala * 100) + '%"></i><span class="teto" style="left:' + (teto / escala * 100) + '%"></span></span><span class="num">' + x.sala + (x.orient ? ' + ' + x.orient : '') + ' h</span></div>').join('') +
     '</div><p class="foot">Faixa cheia: horas em sala. Faixa hachurada: atividades de orientação, que não ocupam dia. Traço vermelho: teto de ' + teto + ' h em sala. Matrícula semestral de ' + fmt(R.matMin) + ' h a ' + fmt(R.matMax) + ' h.</p></div>';
 
-  const catDe = x => x.tipo === 'obr' ? (x.bas ? 'Básico profissional' : 'Complementar obrigatório') + (+x.p > 0 ? ', ' + x.p + 'º período' : '') : x.tipo === 'opt' ? 'Optativo, à escolha' : x.tipo === 'ac' ? 'Flexível, à escolha' : 'Aproveitamento';
-  const comExt = P().comps.filter(x => num(x.ext) > 0 || (x.tipo === 'ac' && num(x.extTeto) > 0))
-    .sort((a, b) => ({obr:0, apr:1, opt:2, ac:3})[a.tipo] - ({obr:0, apr:1, opt:2, ac:3})[b.tipo] || (num(a.p) || 99) - (num(b.p) || 99) || a.n.localeCompare(b.n, 'pt-BR'));
-  const tExt = '<div class="box"><h2>Creditação de extensão</h2><p class="foot" style="margin-top:-4px">Contada à parte: as horas abaixo já estão dentro das categorias do histórico e não se somam a elas.</p><div class="tbl-wrap"><table><thead><tr><th class="r">Exigida (piso de 10%)</th><th class="r">Fixa na grade</th><th class="r">Pendente, à escolha do estudante</th><th class="r">Teto no histórico (15%)</th></tr></thead><tbody>' +
-    '<tr><td class="r num"><b>' + fmt(R.piso) + '</b></td><td class="r num">' + fmt(R.extMin) + '</td><td class="r num">' + fmt(R.livre) + '</td><td class="r num">' + fmt(R.tetoExt) + '</td></tr></tbody></table></div>' +
-    '<h3>Componentes que incorporam extensão</h3><div class="tbl-wrap"><table><thead><tr><th>Componente</th><th>Categoria no histórico</th><th class="r">CH do componente</th><th class="r t-ext">CH de extensão</th></tr></thead><tbody>' +
-    comExt.map(x => '<tr><td>' + esc(x.n) + '</td><td>' + catDe(x) + '</td><td class="r num">' + fmt(chOf(x)) + '</td><td class="r num">' + (x.tipo === 'ac' ? 'até ' + fmt(Math.min(chOf(x), num(x.extTeto))) : fmt(num(x.ext))) + '</td></tr>').join('') +
-    '</tbody></table></div>' +
-    '<p class="foot">Fixa: ' + fmt(R.extMin) + ' h nos componentes obrigatórios' + (R.extApr ? ' e no aproveitamento' : '') + (R.bloco ? ' e no mínimo de UCE optativas' : '') + '. ' +
-    (R.livre ? 'Pendente: ' + fmt(R.livre) + ' h, a cumprir em optativas com extensão (até ' + fmt(R.optExtLivre) + ' h, ' + (R.caminhoOpt ? 'fecha' : 'não fecha') + ' sozinho) ou no bloco flexível (até ' + fmt(R.extFlex) + ' h, ' + (R.caminhoFlex ? 'fecha' : 'não fecha') + ' sozinho). ' : 'A parte fixa já alcança o piso. ') +
-    'Extensão pendente impede a conclusão; o que passar de ' + fmt(R.tetoExt) + ' h não é registrado como extensão.</p></div>';
+  /* Como se monta a extensão ofertada: obrigatórios (todos cursam), optativos e flexíveis (à escolha), em ordem, com o acumulado.
+     O acumulado é da oferta; o estudante integraliza no máximo o teto, e nas optativas aproveita no máximo a CH de optativas exigida. */
+  const comps = P().comps;
+  const obrE = comps.filter(x => x.tipo === 'obr' && num(x.ext) > 0).sort((a, b) => (num(a.p) || 99) - (num(b.p) || 99));
+  const aprE = comps.filter(x => x.tipo === 'apr' && num(x.ext) > 0);
+  const optE = comps.filter(x => x.tipo === 'opt' && num(x.ext) > 0).sort((a, b) => a.n.localeCompare(b.n, 'pt-BR'));
+  const flxE = comps.filter(x => x.tipo === 'ac');
+  const ofertaTot = R.extMin + Math.max(0, R.ofertaUCE - R.bloco) + R.extFlex;
+  const escM = Math.max(ofertaTot, R.tetoExt) * 1.05;
+  let acc = 0, passouPiso = false, passouTeto = false;
+  const mini = v => '<span class="mini" title="Acumulado: ' + fmt(v) + ' h"><i style="width:' + (Math.min(v, escM) / escM * 100) + '%"></i><b style="left:' + (R.piso / escM * 100) + '%"></b><b class="t" style="left:' + (R.tetoExt / escM * 100) + '%"></b></span>';
+  const marca = () => { const m = []; if (!passouPiso && acc >= R.piso){ passouPiso = true; m.push('<span class="gst ok">alcança o piso</span>'); } if (!passouTeto && acc > R.tetoExt){ passouTeto = true; m.push('<span class="gst warn">passa do teto: excedente é só oferta</span>'); } return m.join(' '); };
+  const linhaE = (nome, sit, v, txtV) => { acc += v; return '<tr><td>' + esc(nome) + '</td><td>' + sit + '</td><td class="r num">' + (txtV || fmt(v)) + '</td><td class="r num">' + fmt(acc) + '</td><td>' + mini(acc) + ' ' + marca() + '</td></tr>'; };
+  const vazio = txt => '<tr><td class="muted">' + txt + '</td><td></td><td></td><td></td><td></td></tr>';
+  const grp = (t, sub) => '<tr class="grp"><td colspan="5">' + t + (sub ? ' <span class="muted" style="font-weight:400">· ' + sub + '</span>' : '') + '</td></tr>';
+  let corpo = grp('Obrigatórios', 'todos cursam; parte fixa') +
+    (obrE.length ? obrE.map(x => linhaE(x.n, 'obrigatório' + (+x.p > 0 ? ', ' + x.p + 'º período' : ''), num(x.ext))).join('') : vazio('Nenhum obrigatório com extensão.')) +
+    aprE.map(x => linhaE(x.n, 'aproveitamento, fixo', num(x.ext))).join('') +
+    (R.bloco ? linhaE('Mínimo em UCE optativas', 'fixo, nas optativas', R.bloco) : '');
+  corpo += grp('Optativos com extensão', 'oferta; o estudante escolhe e aproveita até ' + fmt(R.optExig - R.bloco) + ' h nas optativas') +
+    (optE.length ? optE.map(x => linhaE(x.n, 'optativo, à escolha', R.bloco ? 0 : num(x.ext), R.bloco ? fmt(num(x.ext)) + ' (no mínimo)' : '')).join('') : vazio('Nenhum optativo com extensão cadastrado.'));
+  corpo += grp('Flexíveis', 'à escolha; só parte da carga conta como extensão') +
+    (flxE.length ? flxE.map(x => num(x.extTeto) > 0 ? linhaE(x.n, 'flexível, à escolha (' + fmt(chOf(x)) + ' h no total)', Math.min(chOf(x), num(x.extTeto)), 'até ' + fmt(Math.min(chOf(x), num(x.extTeto)))) : vazio(esc(x.n) + ': não conta como extensão.')).join('') : vazio('Nenhum componente flexível.'));
+  const maxEst = Math.min(R.tetoExt, R.extMax);
+  const tExt = '<div class="box" style="grid-column:1/-1"><h2>Creditação de extensão</h2><p class="foot" style="margin-top:-4px">Contada à parte: as horas abaixo já estão dentro das categorias do histórico e não se somam a elas.</p>' +
+    '<div class="tbl-wrap"><table><thead><tr><th class="r">Exigida (piso de 10%)</th><th class="r">Fixa na grade</th><th class="r">Pendente, à escolha do estudante</th><th class="r">Teto integralizável (15%)</th><th class="r">Oferta total</th></tr></thead><tbody>' +
+    '<tr><td class="r num"><b>' + fmt(R.piso) + '</b></td><td class="r num">' + fmt(R.extMin) + '</td><td class="r num">' + fmt(R.livre) + '</td><td class="r num">' + fmt(R.tetoExt) + '</td><td class="r num">' + fmt(ofertaTot) + '</td></tr></tbody></table></div>' +
+    '<h3>Como se monta a oferta de extensão</h3><div class="tbl-wrap"><table class="monta"><thead><tr><th>Componente</th><th>Situação</th><th class="r t-ext">CH de extensão</th><th class="r">Acumulado</th><th>Acumulado em relação ao piso (traço forte) e ao teto (traço suave)</th></tr></thead><tbody>' + corpo +
+    '</tbody><tfoot>' +
+    '<tr><td colspan="2">Oferta total de extensão</td><td class="r num">' + fmt(ofertaTot) + '</td><td colspan="2" class="muted">' + (ofertaTot > R.tetoExt ? fmt(ofertaTot - R.tetoExt) + ' h acima do teto: ficam como oferta; o estudante pode cursá-las, mas no histórico integralizam no máximo ' + fmt(R.tetoExt) + ' h.' : 'dentro do teto de ' + fmt(R.tetoExt) + ' h.') + '</td></tr>' +
+    '<tr><td colspan="2">Piso exigido de cada estudante</td><td class="r num">' + fmt(R.piso) + '</td><td colspan="2" class="muted">' + (R.livre ? fmt(R.extMin) + ' h fixas + ' + fmt(R.livre) + ' h escolhidas entre optativos e flexíveis. Só por optativos: ' + (R.caminhoOpt ? 'fecha' : 'não fecha') + '. Só pelos flexíveis: ' + (R.caminhoFlex ? 'fecha' : 'não fecha') + '.' : 'a parte fixa já alcança o piso.') + '</td></tr>' +
+    '<tr><td colspan="2">Máximo que um estudante integraliza</td><td class="r num">' + fmt(maxEst) + '</td><td colspan="2" class="muted">' + (R.extMax > R.tetoExt ? 'limitado pelo teto de 15%.' : 'soma da parte fixa, do que as optativas exigidas comportam e do bloco flexível.') + ' Extensão pendente impede a conclusão.</td></tr>' +
+    '</tfoot></table></div></div>';
 
   const tA13 = '<div class="box"><h2>Atividades complementares e prática jurídica</h2><div class="tbl-wrap"><table><thead><tr><th>Componente</th><th class="r">CH</th></tr></thead><tbody>' +
     R.a13Itens.map(x => '<tr><td>' + esc(x.n) + '</td><td class="r num">' + chOf(x) + '</td></tr>').join('') +
@@ -1244,20 +1271,21 @@ function renderGraficos(){
     gLeg([['var(--s3)', 'Extensão fixa'], ['var(--s3)', 'Extensão pendente, à escolha', 'hext']]) + '</div>';
 
   /* 2. extensão: parte fixa, caminhos, piso e teto */
-  const escE = Math.max(R.tetoExt, R.extMax) * 1.08;
+  const escE = Math.max(R.tetoExt, R.extMax, R.extMin + Math.max(0, R.ofertaUCE - R.bloco) + R.extFlex) * 1.08;
   const fixa = {v:R.extMin, cor:'var(--s3)', t:'Parte fixa: ' + fmt(R.extMin) + ' h'};
   const opt = {v:R.optExtLivre, cor:'var(--s2)', t:'Optativas com extensão: até ' + fmt(R.optExtLivre) + ' h'};
   const flx = {v:R.extFlex, cor:'var(--s5)', t:'Bloco flexível: até ' + fmt(R.extFlex) + ' h'};
   const marcas = [{v:R.piso, t:'Piso: ' + fmt(R.piso) + ' h (10%)'}, {v:R.tetoExt, t:'Teto no histórico: ' + fmt(R.tetoExt) + ' h (15%)', leve:true}];
-  const linha = (rot, segs, ok, livreZero) => '<div class="grow"><span class="rot">' + rot + '</span>' + gTrack(segs, escE, marcas) + '<span class="val">' + fmt(segs.reduce((a, x) => a + x.v, 0)) + ' h' + (livreZero ? '' : ' <span class="gst ' + (ok ? 'ok' : 'bad') + '">' + (ok ? 'fecha' : 'não fecha') + '</span>') + '</span></div>';
+  const linha = (rot, segs, ok, livreZero) => '<div class="grow"><span class="rot">' + rot + '</span>' + gTrack(segs, escE, marcas) + '<span class="val">' + fmt(segs.reduce((a, x) => a + x.v, 0)) + ' h' + (segs.reduce((a, x) => a + x.v, 0) > R.tetoExt ? ' <span class="muted">(integraliza ' + fmt(R.tetoExt) + ')</span>' : '') + (livreZero ? '' : ' <span class="gst ' + (ok ? 'ok' : 'bad') + '">' + (ok ? 'fecha' : 'não fecha') + '</span>') + '</span></div>';
   const g2 = '<div class="box gbox"><h2>Extensão: caminhos até o piso</h2><p class="lead">Parte fixa de ' + fmt(R.extMin) + ' h; piso de ' + fmt(R.piso) + ' h para cada estudante; teto de ' + fmt(R.tetoExt) + ' h no histórico. ' +
     (R.livre ? 'A parte livre, de ' + fmt(R.livre) + ' h, ' + (R.caminhoOpt && R.caminhoFlex ? 'fecha por qualquer dos dois caminhos.' : R.caminhoOpt ? 'só fecha pelas optativas.' : R.caminhoFlex ? 'só fecha pelo bloco flexível.' : (R.extMax >= R.piso ? 'só fecha combinando os dois caminhos.' : 'não fecha nem combinando os caminhos.')) : 'A parte fixa já alcança o piso.') + '</p>' +
     gLeg([['var(--s3)', 'Parte fixa'], ['var(--s2)', 'Optativas com extensão'], ['var(--s5)', 'Bloco flexível']]) +
     linha('Parte fixa', [fixa], R.extMin >= R.piso, true) +
     (R.livre ? linha('Fixa + optativas', [fixa, opt], R.caminhoOpt) + linha('Fixa + flexível', [fixa, flx], R.caminhoFlex) : '') +
-    linha('Máximo possível', [fixa, opt, flx], R.extMax >= R.piso, R.livre === 0) +
+    linha('Máximo ao estudante', [fixa, opt, flx], R.extMax >= R.piso, R.livre === 0) +
+    (R.ofertaUCE - R.bloco > R.optExtLivre ? linha('Oferta total', [fixa, {v:R.ofertaUCE - R.bloco, cor:'var(--s2)', t:'Optativos com extensão ofertados: ' + fmt(R.ofertaUCE - R.bloco) + ' h'}, flx], true, true) : '') +
     gEixo(escE, [{v:0, t:'0'}, {v:R.piso, t:'piso ' + fmt(R.piso)}, {v:R.tetoExt, t:'teto ' + fmt(R.tetoExt)}]) +
-    '<p class="foot">Traço forte: piso. Traço suave: teto no histórico; o que passar dele não é registrado como extensão.</p></div>';
+    '<p class="foot">Traço forte: piso. Traço suave: teto. O que passar do teto é oferta: o estudante pode cursar, mas no histórico integraliza no máximo o teto.</p></div>';
 
   /* 3. limites normativos em percentual da carga */
   const lim = [
