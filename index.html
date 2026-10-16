@@ -252,6 +252,7 @@ tfoot td{font-weight:600; background:var(--surface-2)}
 .mini b{position:absolute; top:-3px; bottom:-3px; width:2px; background:var(--ink)}
 .mini b.t{background:var(--muted)}
 table.monta td{white-space:normal}
+.fixa{padding:10px 12px; border:1px solid var(--warn); border-left:4px solid var(--warn); border-radius:var(--r); background:var(--warn-soft); font-size:.9rem}
 table.equiv td{white-space:normal; font-size:.8rem} table.equiv td:nth-child(10){min-width:11rem}
 ol.regras{margin:0; padding-left:1.1rem; font-size:.84rem; display:flex; flex-direction:column; gap:3px}
 .card .extb{align-self:flex-start; font-size:.68rem; font-weight:600; padding:0 6px; border-radius:999px; color:var(--ok); background:var(--ok-soft)}
@@ -307,7 +308,7 @@ ol.regras{margin:0; padding-left:1.1rem; font-size:.84rem; display:flex; flex-di
     <button type="button" role="tab" data-tab="conf" id="tb-conf">Conformidade</button>
     <button type="button" role="tab" data-tab="totais" id="tb-totais">Totais</button>
     <button type="button" role="tab" data-tab="graf" id="tb-graf">Gráficos</button>
-    <button type="button" role="tab" data-tab="equiv" id="tb-equiv">Equivalências</button>
+    <button type="button" role="tab" data-tab="equiv" id="tb-equiv">Equivalências (tabela fixa)</button>
   </nav>
 
   <div id="alertas" class="alertas" role="alert" hidden></div>
@@ -1217,7 +1218,8 @@ function renderEquiv(){
       return '<tr><td class="num">' + (++i) + '</td><td></td><td>' + esc(x.comp2019 || '—') + '</td><td class="r num">' + (x.ch2019 || '') + '</td><td>' + esc(x.per2019 || '') + '</td><td>' + esc(x.compNovo || '—') + '</td><td class="r num">' + (x.chNovo || '') + '</td><td>' + esc(x.perNovo || '') + '</td><td>' + esc(x.codNovo || '') + '</td><td>' + r + '</td><td>' + esc(x.inverso || '') + '</td><td>' + esc(x.obs) + (x.emDiscussao ? ' <span class="adec">em discussão</span>' : '') + '</td></tr>';
     }).join('')).join('');
   $('equiv').innerHTML = '<div class="box"><h2>Equivalências entre o currículo de 2019 e a proposta</h2>' +
-    '<p class="foot">Estudo de 16.10.2026, documento de trabalho, nada deliberado. Tabela fixa: não acompanha as alterações feitas na grade. ' + n.ok + ' linhas equivalentes e ' + n.sem + ' sem equivalência pela carga.</p>' +
+    '<div class="fixa" role="note"><b>Tabela fixa.</b> Ela registra o estudo de equivalências de 16.10.2026 e não muda quando você altera a grade, a tabela de componentes ou a proposta selecionada. Períodos, cargas e equivalências mostrados aqui são os do estudo; para atualizá-los, é preciso uma nova versão do estudo.</div>' +
+    '<p class="foot">Documento de trabalho, nada deliberado. ' + n.ok + ' linhas equivalentes e ' + n.sem + ' sem equivalência pela carga.</p>' +
     '<div class="tbl-wrap"><table class="equiv"><thead><tr><th>Nº</th><th>Código 2019</th><th>Componente 2019</th><th class="r">CH</th><th>Per.</th><th>Componente novo</th><th class="r">CH</th><th>Per.</th><th>Código novo</th><th>Equivalência</th><th>Inverso</th><th>Observações</th></tr></thead><tbody>' + corpo + '</tbody></table></div>' +
     '<h3>Regras do estudo</h3><ol class="regras">' +
     '<li>Sentido: cada linha vale do currículo de 2019 para o novo, e a equivalência é sempre componente a componente: conteúdo equivalente e carga de 2019 igual ou maior que a nova (RGG, art. 35). A coluna Inverso serve à oferta residual: onde diz Sim, a turma do componente novo pode receber quem continua no currículo de 2019.</li>' +
