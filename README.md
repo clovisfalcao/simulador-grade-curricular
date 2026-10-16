@@ -1,55 +1,34 @@
 # Simulador de estrutura curricular do curso de Direito de Santa Rita
 
-Ferramenta de trabalho do Núcleo Docente Estruturante do curso de Bacharelado em Direito de Santa Rita (DCJ/CCJ/UFPB) para montar e testar a matriz curricular do novo Projeto Pedagógico do Curso.
+Ferramenta de trabalho do Núcleo Docente Estruturante do curso de Bacharelado em Direito de Santa Rita (DCJ/CCJ/UFPB) para montar e testar, em reunião, a estrutura curricular do novo Projeto Pedagógico do Curso.
 
 Os dados carregados são propostas de trabalho. Nenhuma delas representa deliberação do NDE ou do Colegiado do Curso.
 
+Página publicada: https://clovisfalcao.github.io/simulador-grade-curricular/
+
+## Propostas
+
+- **Grade de trabalho (16/10) (padrão)**: proposta atual, com os ajustes da reunião de 16.10.2026. São 3.270 h de obrigatórias, 240 h de optativas e 240 h de flexíveis, num total de 3.750 h (em discussão).
+- **Versão de 18/09 (memória)**: estudo preliminar discutido pelo NDE em 18.09.2026, mantido para comparação.
+
+Componentes com a etiqueta **a decidir** dependem do NDE ou do Colegiado. A etiqueta se marca ou desmarca no painel do componente.
+
 ## O que o simulador faz
 
-- Mostra a grade por período e destaca a linha de pré-requisitos de cada componente: o que ele exige e o que depende dele.
-- Permite ligar e desligar pré-requisitos clicando nos componentes ("Modo ligação").
-- Permite arrastar os componentes de um período para outro. O simulador recusa o arrasto que poria um componente no mesmo período de seu pré-requisito, ou antes dele, e avisa quando uma alteração cria problema novo, como período acima do teto de horas em sala.
-- Registra, para cada componente, a carga horária teórica, prática e de extensão, com os créditos correspondentes (1 crédito = 15 h).
-- Calcula os totais nas categorias do histórico escolar (básicos profissionais, complementares obrigatórios, optativos e flexíveis) e conta a extensão à parte, como categoria sobreposta, mostrando em que componentes ela está.
-- Mostra as optativas fora das colunas de períodos, no banco, com o período a que cada uma pertence: o seguinte ao de seu pré-requisito mais adiantado, obrigatório ou optativo, ou o período 0 se não houver pré-requisito. O banco lista as optativas do período 0 ao 10º.
-- Verifica a conformidade da proposta, separando exigências normativas de diretrizes do NDE.
-- Compara a proposta de trabalho com as cópias alteradas a partir dela.
-
-## Verificações
-
-**Exigências normativas**
-
-| Verificação | Fonte |
-|---|---|
-| Carga horária mínima de 3.700 h | DCN (Res. CNE/CES 5/2018), art. 12; Res. CNE/CES 2/2007, anexo |
-| Integralização mínima de cinco anos | Res. CNE/CES 2/2007, art. 2º, III, "d" |
-| Extensão entre 10% e 15% da carga total, em qualquer trajetória | Res. CONSEPE 02/2022, art. 6º |
-| Conteúdos básicos profissionais, no mínimo 50% | RGG (Res. CONSEPE 29/2020), art. 16, § 2º, I |
-| Atividades complementares e prática jurídica, no máximo 20% | DCN, art. 13; Res. CNE/CES 2/2007, art. 1º, parágrafo único |
-| Pré-requisito em nível anterior da estrutura | RGG, art. 33, § 1º |
-| Extensão creditada apenas pelas modalidades do art. 7º | Res. CONSEPE 02/2022, art. 7º |
-
-**Diretrizes do NDE**: teto de horas em sala por período, disciplinas obrigatórias com 60 h, componentes numerados em períodos seguidos, Penal acompanhando Civil, cadeia de disciplinas até o último período, pré-requisitos sem redundância, limites de matrícula semestral, oferta para o bloco de UCE optativas, vedação de dupla contagem entre extensão e prática jurídica.
-
-## Propostas incluídas
-
-- **Grade de trabalho (16/10) (padrão)**: a única versão de trabalho. É o estado inicial de 16.10.2026, com 180 h de extensão fixa nas UCE obrigatórias, piso de 10% e teto de 15% de extensão, bloco flexível de 240 h (até X h como extensão), Medicina Legal como optativa, Criminologia, Política Criminal e Leis Penais Especiais no 10º período, Libras e duas UCE optativas a criar. Todos os outros estados se montam sobre ela, e o simulador mostra em texto e em gráficos o que cada alteração muda.
-- **Versão de 18/09 (memória)**: o estudo preliminar discutido pelo NDE em 18 de setembro de 2026, mantido como registro e para comparação.
-
-Componentes com a etiqueta **a decidir** dependem do NDE ou do Colegiado; a etiqueta se marca ou desmarca no painel do componente.
-
-As alterações são recalculadas na hora. Para testar alternativas sem perder a base, use **Duplicar** e altere a cópia; as abas Totais e Gráficos comparam as propostas lado a lado. **Restaurar originais** volta às duas propostas de partida.
+- **Grade**: mostra os componentes por período e a linha de pré-requisitos. Permite arrastar componentes entre períodos e ligar ou desligar pré-requisitos. Recusa o arrasto que poria um componente no mesmo período de seu pré-requisito, ou antes dele. As optativas ficam fora das colunas, no período seguinte ao de seu pré-requisito.
+- **Tabela de componentes**: edição em linha da carga teórica, prática e de extensão de cada componente.
+- **Conformidade**: separa as exigências normativas das diretrizes do NDE.
+- **Totais**: totalização no formato do histórico escolar (básicos profissionais, complementares obrigatórios, optativos e flexíveis). A creditação de extensão aparece num quadro à parte, porque a extensão se sobrepõe a essas categorias.
+- **Gráficos**: composição da carga, caminhos da extensão até o piso, carga por período e comparação entre propostas.
+- **Equivalências**: tabela do currículo de 2019 para a proposta, pelo estudo de 16.10.2026.
 
 ## Como usar
 
-Abra `index.html` no navegador ou acesse a página publicada. Nada é salvo automaticamente: use **Salvar ponto de controle** para guardar a situação atual no navegador e **Pontos de controle** para voltar a uma situação salva. Para levar uma proposta a outro computador ou compartilhá-la, use **Exportar** e depois **Importar** no destino.
+Abra `index.html` no navegador ou acesse a página publicada. Nada é salvo automaticamente. Use **Salvar ponto de controle** para guardar a situação atual no navegador e **Pontos de controle** para voltar a uma situação salva.
 
-O simulador também importa o JSON exportado pelo [simulador original do NDE](https://hugobelmorais-oss.github.io/simulador-ppc-dcj/). Nesse caso as categorias são convertidas automaticamente e os pré-requisitos precisam ser preenchidos.
+Em **Exportar**, há duas saídas:
 
-## Publicação no GitHub Pages
+- o arquivo `.json`, que se abre em outro computador com **Importar**;
+- a planilha da estrutura curricular (`.csv`), com período, categoria no histórico, natureza, carga decomposta, créditos e pré-requisitos.
 
-1. Crie um repositório público e envie os arquivos `index.html` e `README.md` para a raiz.
-2. Em **Settings → Pages**, escolha **Deploy from a branch**, branch `main`, pasta `/ (root)`.
-3. Em alguns minutos a página fica disponível em `https://<usuario>.github.io/<repositorio>/`.
-
-O arquivo é autocontido: usa apenas as fontes IBM Plex do Google Fonts e não depende de servidor.
+O arquivo é autocontido: usa apenas as fontes IBM Plex do Google Fonts e não depende de servidor. O GitHub Pages publica a branch `claude/nice-babbage-pqpsnj`.
