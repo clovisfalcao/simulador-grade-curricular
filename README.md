@@ -24,7 +24,7 @@ Componentes com a etiqueta amarela **em discussão** têm algum ponto em aberto.
 
 ## Como usar
 
-Abra `index.html` no navegador ou acesse a página publicada. Nada é salvo automaticamente. Use **Salvar ponto de controle** para guardar a situação atual no navegador e **Pontos de controle** para voltar a uma situação salva.
+Abra `index.html` no navegador ou acesse a página publicada. Nada é salvo automaticamente. Use **Salvar checkpoint** para guardar a situação atual no navegador e **Checkpoints** para voltar a uma situação salva.
 
 Em **Exportar**, há duas saídas:
 

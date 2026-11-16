@@ -30,7 +30,7 @@ Variantes intermediárias (grade de 16/10 antes dos ajustes, variante de duas UC
 
 ## 4. Modelo de dados
 
-O estado é `{props: [proposta, ...], ativo: id, modelos: [...]}`. Não há salvamento automático. "Salvar ponto de controle" grava o estado em `simulador-ppc-dcj-sr-v1` e a lista de pontos em `simulador-ppc-dcj-sr-v1-pontos`. Também ficam no navegador a aba ativa (`-tab`), a faixa de ajuda (`-ajuda`) e o tema (`-tema`).
+O estado é `{props: [proposta, ...], ativo: id, modelos: [...]}`. Não há salvamento automático. "Salvar checkpoint" grava o estado em `simulador-ppc-dcj-sr-v1` e a lista de pontos em `simulador-ppc-dcj-sr-v1-pontos`. Também ficam no navegador a aba ativa (`-tab`), a faixa de ajuda (`-ajuda`) e o tema (`-tema`).
 
 **Proposta**: `id`, `nome`, `sub` e `cfg`, com `optExig` (CH de optativas exigida), `tetoSala` (300), `durMin` (10), `cargaMin` (3.700), `perMax` (15), `matMax` e `matMin` (vazios: calculados pela regra) e `cargaEmDiscussao`.
 
@@ -72,10 +72,10 @@ A distinção entre norma e diretriz é deliberada e deve ser mantida. A cada al
 
 ## 7. Interface
 
-Cabeçalho com proposta, duplicar, renomear, excluir, exportar, importar e restaurar originais; pontos de controle; botão do visual escuro (o claro é o padrão). Abas:
+Cabeçalho com proposta, duplicar, renomear, excluir, exportar, importar e restaurar originais; checkpoints; botão do visual escuro (o claro é o padrão). Abas:
 
 - **Grade e pré-requisitos**: arrastar entre períodos, modo ligação, cadeia mais longa e etiquetas de extensão e de "em discussão".
-- **Tabela de componentes**.
+- **Tabela de componentes**: a coluna "AC ou prática (20%)" marca o que conta no teto de atividades complementares e prática jurídica (o nome "art. 13" não aparece na tela; a fonte normativa fica na verificação da Conformidade).
 - **Conformidade**: parâmetros, com a extensão aproveitável no bloco flexível.
 - **Totais**: totalização no formato do histórico, creditação de extensão com a tabela "Como se monta a oferta de extensão", obrigatórios por eixo, carga por período, art. 13 e comparação entre propostas.
 - **Gráficos**: composição da carga com a extensão sobreposta, caminhos da extensão, carga por período, componentes com extensão e comparação.
