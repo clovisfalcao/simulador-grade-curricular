@@ -2,13 +2,13 @@
 
 Ferramenta de trabalho do Núcleo Docente Estruturante do curso de Bacharelado em Direito de Santa Rita (DCJ/CCJ/UFPB) para montar e testar, em reunião, a estrutura curricular do novo Projeto Pedagógico do Curso.
 
-Os dados carregados são propostas de trabalho. Nenhuma delas representa deliberação do NDE ou do Colegiado do Curso.
+Os dados carregados são propostas de trabalho e nenhuma é a versão final. A estrutura curricular segue em deliberação no NDE e no Colegiado do Curso, que já decidiram vários pontos. A grade de trabalho de 16/10 está desatualizada: não reflete as decisões posteriores.
 
 Página publicada: https://clovisfalcao.github.io/simulador-grade-curricular/
 
 ## Propostas
 
-O simulador abre com a grade em branco, para que ninguém tome a tela inicial pela situação atual da discussão. As duas propostas abaixo ficam no checkpoint fixo **Grade de trabalho de 16/10**, aberto em **Checkpoints**, que não pode ser excluído. O botão **Começar em branco** limpa a área de trabalho.
+O simulador abre com a grade em branco, para que ninguém tome a tela inicial pela situação atual da discussão. As duas propostas abaixo ficam no checkpoint fixo **Grade de trabalho de 16/10 (desatualizada)**, aberto em **Checkpoints**, que não pode ser excluído. O botão **Começar em branco** limpa a área de trabalho.
 
 - **Grade de trabalho (16/10)**: proposta atual, com os ajustes da reunião de 16.10.2026. São 3.270 h de obrigatórias, 240 h de optativas e 240 h de flexíveis, num total de 3.750 h (em discussão).
 - **Versão de 18/09 (memória)**: estudo preliminar discutido pelo NDE em 18.09.2026, mantido para comparação.
