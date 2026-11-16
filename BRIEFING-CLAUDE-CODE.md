@@ -23,7 +23,9 @@ O GitHub Pages publica a branch `claude/nice-babbage-pqpsnj`. O `.gitignore` exc
 
 ## 3. Propostas de partida
 
-- **Grade de trabalho (16/10)** (id `atual`): a proposta atual e padrão, com os ajustes da reunião de 16.10.2026. História do Direito no 1º período e Economia Política no 2º. Direito Empresarial I no 8º, em discussão (no 5º, aquele período passaria a 360 h em sala). UCE-OB I, II e III no 3º, 4º e 5º, em sequência. Criminologia obrigatória no 10º e Leis Penais Especiais optativa, as duas só com Direito Penal III como pré-requisito (o coordenador prefere um pré-requisito por disciplina). Serviços de Assessoria I e II com 60 h de prática. Pesquisa Aplicada ao Direito com 30 h, como exceção em discussão. Carga total de 3.750 h, marcada em discussão (`cfg.cargaEmDiscussao`). Matrícula de 240 h a 420 h, valores arredondados e não definitivos (`cfg.matMin`, `cfg.matMax`).
+Na primeira visita (sem nada salvo no navegador), a área de trabalho abre com uma única proposta vazia, "Grade em branco" (`BRANCO`, sem componentes, com a configuração da grade de trabalho). As duas propostas abaixo ficam no checkpoint fixo "Grade de trabalho de 16/10" (`PONTOS_FIXOS`), listado em Checkpoints sem botão de excluir. O botão "Começar em branco" volta à proposta vazia. Quem já tinha uma área de trabalho salva continua com ela.
+
+- **Grade de trabalho (16/10)** (id `atual`): a proposta de trabalho, com os ajustes da reunião de 16.10.2026. História do Direito no 1º período e Economia Política no 2º. Direito Empresarial I no 8º, em discussão (no 5º, aquele período passaria a 360 h em sala). UCE-OB I, II e III no 3º, 4º e 5º, em sequência. Criminologia obrigatória no 10º e Leis Penais Especiais optativa, as duas só com Direito Penal III como pré-requisito (o coordenador prefere um pré-requisito por disciplina). Serviços de Assessoria I e II com 60 h de prática. Pesquisa Aplicada ao Direito com 30 h, como exceção em discussão. Carga total de 3.750 h, marcada em discussão (`cfg.cargaEmDiscussao`). Matrícula de 240 h a 420 h, valores arredondados e não definitivos (`cfg.matMin`, `cfg.matMax`).
 - **Versão de 18/09 (memória)** (id `anterior`): o estudo preliminar discutido em 18.09.2026, fiel ao documento, mantido para comparação.
 
 Variantes intermediárias (grade de 16/10 antes dos ajustes, variante de duas UCE, versão de 19/09) saíram. `incluirModelos` as retira uma única vez de quem as tinha salvas (marcador `retirados-2` em `S.modelos`), leva Direito Empresarial I ao 8º, em discussão, em quem salvou a grade antes dessa decisão (marcador `ajuste-2`), acrescenta as propostas novas e abre a atual.
@@ -72,7 +74,7 @@ A distinção entre norma e diretriz é deliberada e deve ser mantida. A cada al
 
 ## 7. Interface
 
-Cabeçalho com proposta, duplicar, renomear, excluir, exportar, importar e restaurar originais; checkpoints; botão do visual escuro (o claro é o padrão). Abas:
+Cabeçalho com proposta, duplicar, renomear, excluir, exportar, importar e começar em branco; checkpoints; botão do visual escuro (o claro é o padrão). Abas:
 
 - **Grade e pré-requisitos**: arrastar entre períodos, modo ligação, cadeia mais longa e etiquetas de extensão e de "em discussão".
 - **Tabela de componentes**: a coluna "AC ou prática (20%)" marca o que conta no teto de atividades complementares e prática jurídica (o nome "art. 13" não aparece na tela; a fonte normativa fica na verificação da Conformidade).
