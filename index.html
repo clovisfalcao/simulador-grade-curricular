@@ -850,7 +850,7 @@ function renderTopo(){
     ['Básicos profissionais', fmtp(R.pBas), fmt(R.bas) + ' h · mínimo 50%', st('Conteúdos básicos profissionais')],
     ['AC e prática jurídica', fmtp(R.pA13), fmt(R.a13) + ' h · máximo 20%', st('Atividades complementares e prática jurídica')],
     ['Duração mínima', R.A.ciclo ? 'ciclo' : R.A.max + ' períodos', 'cadeia de disciplinas: ' + R.cadeiaDisc, st('Duração mínima de integralização')],
-    ['Créditos', fmt(R.total / 15), 'matrícula de ' + fmt(R.matMin) + ' a ' + fmt(R.matMax) + ' h' + (P().cfg.matMax || P().cfg.matMin ? ' (não definitivo)' : ''), st('Limites de matrícula por semestre')]
+    ['Créditos', fmtCr(R.total), 'matrícula de ' + fmt(R.matMin) + ' a ' + fmt(R.matMax) + ' h' + (P().cfg.matMax || P().cfg.matMin ? ' (não definitivo)' : ''), st('Limites de matrícula por semestre')]
   ];
   $('resumo').innerHTML = tiles.map(t => '<div class="tile ' + t[3] + '"><span class="lbl">' + t[0] + '</span><span class="val">' + t[1] + '</span><span class="req">' + t[2] + '</span></div>').join('');
 }
@@ -1079,7 +1079,7 @@ function renderTabela(){
         '<td><button type="button" data-edit="' + esc(c.id) + '">Editar</button></td></tr>';
     });
   });
-  h += '</tbody><tfoot><tr><td colspan="8">Total do curso: ' + fmt(R.obrCH) + ' h de obrigatórios, ' + fmt(R.optExig) + ' h de optativas exigidas e ' + fmt(R.acCH) + ' h de flexíveis. A extensão (' + fmt(R.extMin) + ' h fixas) está dentro dessas horas.</td><td class="r num">' + fmt(R.total) + '</td><td class="r num">' + fmt(R.total / 15) + '</td><td colspan="4"></td></tr></tfoot>';
+  h += '</tbody><tfoot><tr><td colspan="8">Total do curso: ' + fmt(R.obrCH) + ' h de obrigatórios, ' + fmt(R.optExig) + ' h de optativas exigidas e ' + fmt(R.acCH) + ' h de flexíveis. A extensão (' + fmt(R.extMin) + ' h fixas) está dentro dessas horas.</td><td class="r num">' + fmt(R.total) + '</td><td class="r num">' + fmtCr(R.total) + '</td><td colspan="4"></td></tr></tfoot>';
   $('tbl').innerHTML = h;
   $('tbl').querySelectorAll('[data-f]').forEach(el => el.addEventListener('change', () => {
     const c = comp(el.dataset.id), f = el.dataset.f; if (!c) return;
@@ -1146,7 +1146,7 @@ function renderTotais(){
     '<tr><th rowspan="2"></th><th class="r" rowspan="2">Básicos profissionais</th><th class="c" colspan="' + (H.length - 1) + '">Componentes curriculares complementares</th><th class="r" rowspan="2">Total</th></tr>' +
     '<tr>' + H.slice(1).map(x => '<th class="r">' + esc(x.nome.replace('Complementares o', 'O')) + '</th>').join('') + '</tr></thead><tbody>' +
     '<tr><td>Exigido (h)</td>' + H.map(x => '<td class="r num">' + fmt(x.ch) + '</td>').join('') + '<td class="r num"><b>' + fmt(R.total) + '</b></td></tr>' +
-    '<tr><td>Créditos</td>' + H.map(x => '<td class="r num">' + fmt(x.ch / 15) + '</td>').join('') + '<td class="r num">' + fmt(R.total / 15) + '</td></tr>' +
+    '<tr><td>Créditos</td>' + H.map(x => '<td class="r num">' + fmtCr(x.ch) + '</td>').join('') + '<td class="r num">' + fmtCr(R.total) + '</td></tr>' +
     '</tbody></table></div>' +
     '<p class="foot">Mesma organização da totalização do histórico escolar. A extensão não entra nestas categorias: ela se sobrepõe a elas e é contada à parte, no quadro Creditação de extensão. Um crédito equivale a 15 h.</p></div>';
 
@@ -1156,8 +1156,8 @@ function renderTotais(){
     return {k, n:cs.length, ch:s(chOf), teo:s(x => num(x.teo)), prat:s(x => num(x.prat)), ext:s(x => num(x.ext))};
   }).filter(x => x.n);
   const tEixo = '<div class="box"><h2>Obrigatórios por eixo</h2><div class="tbl-wrap"><table><thead><tr><th>Eixo</th><th class="r">Comp.</th><th class="r">CH</th><th class="r">Créd.</th></tr></thead><tbody>' +
-    eixos.map(x => '<tr><td>' + EIXO[x.k] + '</td><td class="r num">' + x.n + '</td><td class="r num">' + fmt(x.ch) + '</td><td class="r num">' + fmt(x.ch / 15) + '</td></tr>').join('') +
-    '</tbody><tfoot><tr><td>Total</td><td class="r num">' + obr.length + '</td><td class="r num">' + fmt(R.obrCH) + '</td><td class="r num">' + fmt(R.obrCH / 15) + '</td></tr></tfoot></table></div>' +
+    eixos.map(x => '<tr><td>' + EIXO[x.k] + '</td><td class="r num">' + x.n + '</td><td class="r num">' + fmt(x.ch) + '</td><td class="r num">' + fmtCr(x.ch) + '</td></tr>').join('') +
+    '</tbody><tfoot><tr><td>Total</td><td class="r num">' + obr.length + '</td><td class="r num">' + fmt(R.obrCH) + '</td><td class="r num">' + fmtCr(R.obrCH) + '</td></tr></tfoot></table></div>' +
     '<p class="foot">O eixo é uma classificação pedagógica. As UCE obrigatórias estão no eixo Extensão, mas sua carga também conta na categoria Complementares obrigatórios.</p></div>';
 
   const teto = num(cfg.tetoSala) || 300, escala = Math.max(teto + 120, R.maiorPer, R.matMax);
@@ -1204,7 +1204,7 @@ function renderTotais(){
 
   const props = S.props.map(p => { const r = calc(p); return {p, r}; });
   const linhas = [
-    ['Carga total', x => fmt(x.r.total) + ' h'], ['Créditos', x => fmt(x.r.total / 15)],
+    ['Carga total', x => fmt(x.r.total) + ' h'], ['Créditos', x => fmtCr(x.r.total)],
     ['Extensão fixa', x => fmt(x.r.extMin) + ' h (' + fmtp(x.r.pExtMin) + ')'], ['Piso de extensão', x => fmt(x.r.piso) + ' h'],
     ['Piso só por optativas', x => x.r.livre === 0 ? 'dispensa' : (x.r.caminhoOpt ? 'fecha' : 'não fecha')], ['Piso só pelo flexível', x => x.r.livre === 0 ? 'dispensa' : (x.r.caminhoFlex ? 'fecha' : 'não fecha')],
     ['Básicos profissionais', x => fmtp(x.r.pBas)], ['AC e prática jurídica', x => fmtp(x.r.pA13)],
